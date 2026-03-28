@@ -147,7 +147,7 @@ export class GeminiService {
       generationConfig: {
         temperature: 0.7,
         topP: 0.9,
-        maxOutputTokens: 4096,
+        maxOutputTokens: 16384,
       },
     });
 
@@ -175,10 +175,17 @@ export class GeminiService {
     }
 
     const json = (await response.json()) as {
-      candidates?: { content?: { parts?: { text?: string }[] } }[];
+      candidates?: {
+        content?: { parts?: { text?: string; thought?: boolean }[] };
+      }[];
     };
 
-    const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+    const parts = json.candidates?.[0]?.content?.parts ?? [];
+    // gemini-2.5-flash returns thinking parts (thought: true) before the
+    // actual response — skip them and take the first non-thought text part.
+    const text =
+      parts.find((p) => !p.thought && typeof p.text === "string")?.text ??
+      parts.find((p) => typeof p.text === "string")?.text;
     if (!text) {
       throw new Error("Gemini returned an empty response");
     }
