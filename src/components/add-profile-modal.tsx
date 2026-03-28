@@ -1,20 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  KeyboardAvoidingView,
+  Modal,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Icon } from "@/components/icon";
 import { Colors, FontFamily, Radius, Spacing } from "@/constants/theme";
-import { type ConditionType } from "@/types";
+import { type ChildProfile } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -22,21 +21,11 @@ import { type ConditionType } from "@/types";
 
 interface AddProfileModalProps {
   visible: boolean;
+  /** When provided the modal is in edit mode and pre-fills the form. */
+  editProfile?: ChildProfile | null;
   onClose: () => void;
-  onSave: (draft: {
-    name: string;
-    age?: number;
-    condition: ConditionType;
-    notes?: string;
-  }) => void;
+  onSave: (draft: { name: string; conditionDescription: string }) => void;
 }
-
-const CONDITIONS: ConditionType[] = [
-  "ASD",
-  "Severe Allergy",
-  "ADHD",
-  "Physical",
-];
 
 // ---------------------------------------------------------------------------
 // Component
@@ -44,22 +33,38 @@ const CONDITIONS: ConditionType[] = [
 
 export function AddProfileModal({
   visible,
+  editProfile,
   onClose,
   onSave,
 }: AddProfileModalProps) {
   const insets = useSafeAreaInsets();
+  const isEdit = !!editProfile;
+
   const [name, setName] = useState("");
-  const [age, setAge] = useState("");
-  const [condition, setCondition] = useState<ConditionType>("ASD");
-  const [notes, setNotes] = useState("");
-  const [errors, setErrors] = useState<{ name?: string; age?: string }>({});
+  const [conditionDescription, setConditionDescription] = useState("");
+  const [errors, setErrors] = useState<{
+    name?: string;
+    conditionDescription?: string;
+  }>({});
+
+  // Pre-fill form when switching to edit mode
+  useEffect(() => {
+    if (visible && editProfile) {
+      setName(editProfile.name);
+      setConditionDescription(editProfile.conditionDescription);
+      setErrors({});
+    } else if (!visible) {
+      setName("");
+      setConditionDescription("");
+      setErrors({});
+    }
+  }, [visible, editProfile]);
 
   function validate(): boolean {
     const next: typeof errors = {};
     if (!name.trim()) next.name = "Name is required.";
-    const ageNum = Number(age);
-    if (!age.trim() || isNaN(ageNum) || ageNum < 1 || ageNum > 12) {
-      next.age = "Enter a valid age (1–12).";
+    if (!conditionDescription.trim()) {
+      next.conditionDescription = "Please describe the child's special needs.";
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -69,18 +74,14 @@ export function AddProfileModal({
     if (!validate()) return;
     onSave({
       name: name.trim(),
-      age: age ? Number(age) : undefined,
-      condition,
-      notes: notes.trim() || undefined,
+      conditionDescription: conditionDescription.trim(),
     });
     handleClose();
   }
 
   function handleClose() {
     setName("");
-    setAge("");
-    setCondition("ASD");
-    setNotes("");
+    setConditionDescription("");
     setErrors({});
     onClose();
   }
@@ -92,10 +93,7 @@ export function AddProfileModal({
       presentationStyle="pageSheet"
       onRequestClose={handleClose}
     >
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
+      <KeyboardAvoidingView style={styles.flex} behavior="padding">
         <View
           style={[
             styles.sheet,
@@ -107,7 +105,9 @@ export function AddProfileModal({
 
           {/* Header */}
           <View style={styles.sheetHeader}>
-            <Text style={styles.sheetTitle}>Add Child Profile</Text>
+            <Text style={styles.sheetTitle}>
+              {isEdit ? "Edit Child Profile" : "Add Child Profile"}
+            </Text>
             <Pressable
               onPress={handleClose}
               hitSlop={12}
@@ -137,7 +137,7 @@ export function AddProfileModal({
                   setName(t);
                   setErrors((e) => ({ ...e, name: undefined }));
                 }}
-                placeholder="e.g. Leo Anderson"
+                placeholder="e.g. Leo"
                 placeholderTextColor={Colors.outlineVariant}
                 autoCapitalize="words"
                 returnKeyType="next"
@@ -148,68 +148,36 @@ export function AddProfileModal({
               )}
             </View>
 
-            {/* Age */}
+            {/* Condition description */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Age</Text>
+              <Text style={styles.label}>Condition Description</Text>
+              <Text style={styles.hint}>
+                Describe the child's needs in your own words. This text is
+                anonymised before being sent to AI.
+              </Text>
               <TextInput
-                style={[styles.input, errors.age && styles.inputError]}
-                value={age}
+                style={[
+                  styles.input,
+                  styles.textArea,
+                  errors.conditionDescription && styles.inputError,
+                ]}
+                value={conditionDescription}
                 onChangeText={(t) => {
-                  setAge(t);
-                  setErrors((e) => ({ ...e, age: undefined }));
+                  setConditionDescription(t);
+                  setErrors((e) => ({ ...e, conditionDescription: undefined }));
                 }}
-                placeholder="e.g. 5"
-                placeholderTextColor={Colors.outlineVariant}
-                keyboardType="number-pad"
-                returnKeyType="done"
-                maxLength={2}
-                accessibilityLabel="Child age"
-              />
-              {errors.age && <Text style={styles.errorText}>{errors.age}</Text>}
-            </View>
-
-            {/* Condition picker */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Condition Type</Text>
-              <View style={styles.conditionRow}>
-                {CONDITIONS.map((c) => (
-                  <Pressable
-                    key={c}
-                    style={[
-                      styles.conditionChip,
-                      condition === c && styles.conditionChipSelected,
-                    ]}
-                    onPress={() => setCondition(c)}
-                    accessibilityRole="radio"
-                    accessibilityState={{ checked: condition === c }}
-                  >
-                    <Text
-                      style={[
-                        styles.conditionChipLabel,
-                        condition === c && styles.conditionChipLabelSelected,
-                      ]}
-                    >
-                      {c}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-            </View>
-
-            {/* Notes */}
-            <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Notes (optional)</Text>
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                value={notes}
-                onChangeText={setNotes}
-                placeholder="Dietary restrictions, emergency contacts, accommodations…"
+                placeholder="e.g. Moves by wheelchair, needs ramp access and extended time for transitions"
                 placeholderTextColor={Colors.outlineVariant}
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
-                accessibilityLabel="Additional notes"
+                accessibilityLabel="Condition description"
               />
+              {errors.conditionDescription && (
+                <Text style={styles.errorText}>
+                  {errors.conditionDescription}
+                </Text>
+              )}
             </View>
           </ScrollView>
 
@@ -233,7 +201,9 @@ export function AddProfileModal({
               onPress={handleSave}
               accessibilityRole="button"
             >
-              <Text style={styles.btnSaveLabel}>Save Profile</Text>
+              <Text style={styles.btnSaveLabel}>
+                {isEdit ? "Save Changes" : "Save Profile"}
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -301,6 +271,12 @@ const styles = StyleSheet.create({
     color: Colors.onSurfaceVariant,
     letterSpacing: 0.2,
   },
+  hint: {
+    fontFamily: FontFamily.body,
+    fontSize: 12,
+    lineHeight: 17,
+    color: Colors.outlineVariant,
+  },
   input: {
     fontFamily: FontFamily.body,
     fontSize: 15,
@@ -317,40 +293,13 @@ const styles = StyleSheet.create({
     borderColor: Colors.error,
   },
   textArea: {
-    height: 96,
+    height: 120,
   },
   errorText: {
     fontFamily: FontFamily.body,
     fontSize: 12,
     lineHeight: 16,
     color: Colors.error,
-  },
-  conditionRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: Spacing.two,
-  },
-  conditionChip: {
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.one,
-    borderRadius: Radius.full,
-    borderWidth: 1.5,
-    borderColor: Colors.outlineVariant,
-    backgroundColor: Colors.surfaceContainerLowest,
-  },
-  conditionChipSelected: {
-    borderColor: Colors.primary,
-    backgroundColor: Colors.primaryContainer,
-  },
-  conditionChipLabel: {
-    fontFamily: FontFamily.bodyMedium,
-    fontSize: 13,
-    lineHeight: 18,
-    color: Colors.onSurfaceVariant,
-  },
-  conditionChipLabelSelected: {
-    color: Colors.onPrimaryContainer,
-    fontFamily: FontFamily.bodySemiBold,
   },
   actions: {
     flexDirection: "row",
@@ -360,34 +309,32 @@ const styles = StyleSheet.create({
   },
   btnCancel: {
     flex: 1,
-    paddingVertical: Spacing.two + 2,
-    borderRadius: Radius.sm,
+    paddingVertical: Spacing.three,
+    borderRadius: Radius.full,
     borderWidth: 1.5,
     borderColor: Colors.outlineVariant,
     alignItems: "center",
-    justifyContent: "center",
-  },
-  btnCancelLabel: {
-    fontFamily: FontFamily.bodySemiBold,
-    fontSize: 14,
-    lineHeight: 20,
-    color: Colors.onSurfaceVariant,
   },
   btnSave: {
     flex: 2,
-    paddingVertical: Spacing.two + 2,
-    borderRadius: Radius.sm,
+    paddingVertical: Spacing.three,
+    borderRadius: Radius.full,
     backgroundColor: Colors.primary,
     alignItems: "center",
-    justifyContent: "center",
-  },
-  btnSaveLabel: {
-    fontFamily: FontFamily.bodySemiBold,
-    fontSize: 14,
-    lineHeight: 20,
-    color: Colors.onPrimary,
   },
   btnPressed: {
-    opacity: 0.75,
+    opacity: 0.7,
+  },
+  btnCancelLabel: {
+    fontFamily: FontFamily.headlineMedium,
+    fontSize: 15,
+    lineHeight: 22,
+    color: Colors.onSurfaceVariant,
+  },
+  btnSaveLabel: {
+    fontFamily: FontFamily.headlineMedium,
+    fontSize: 15,
+    lineHeight: 22,
+    color: Colors.onPrimary,
   },
 });

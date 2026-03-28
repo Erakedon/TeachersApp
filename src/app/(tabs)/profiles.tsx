@@ -1,6 +1,13 @@
 ﻿import { useSQLiteContext } from "expo-sqlite";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+    Alert,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AddProfileModal } from "@/components/add-profile-modal";
@@ -15,7 +22,7 @@ import {
     Typography,
 } from "@/constants/theme";
 import { ChildProfileRepository } from "@/db/child-profile-repository";
-import { type ChildProfile, type ConditionType } from "@/types";
+import { type ChildProfile } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Screen
@@ -27,6 +34,9 @@ export default function ProfilesScreen() {
   const insets = useSafeAreaInsets();
   const [profiles, setProfiles] = useState<ChildProfile[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editingProfile, setEditingProfile] = useState<ChildProfile | null>(
+    null,
+  );
 
   const loadProfiles = useCallback(async () => {
     const all = await repo.getAll();
@@ -44,16 +54,43 @@ export default function ProfilesScreen() {
 
   async function handleSave(draft: {
     name: string;
-    age?: number;
-    condition: ConditionType;
-    notes?: string;
+    conditionDescription: string;
   }) {
-    await repo.insert({
-      id: Date.now().toString(),
-      isActive: true,
-      ...draft,
-    });
+    if (editingProfile) {
+      await repo.update(editingProfile.id, draft);
+    } else {
+      await repo.insert({
+        id: Date.now().toString(),
+        isActive: true,
+        ...draft,
+      });
+    }
+    setEditingProfile(null);
     await loadProfiles();
+  }
+
+  function handleEdit(profile: ChildProfile) {
+    setEditingProfile(profile);
+    setModalVisible(true);
+  }
+
+  function handleDelete(id: string) {
+    const profile = profiles.find((p) => p.id === id);
+    Alert.alert(
+      "Delete Profile",
+      `Remove ${profile?.name ?? "this profile"}? This cannot be undone.`,
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await repo.delete(id);
+            await loadProfiles();
+          },
+        },
+      ],
+    );
   }
 
   return (
@@ -87,7 +124,10 @@ export default function ProfilesScreen() {
             styles.addBtn,
             pressed && styles.addBtnPressed,
           ]}
-          onPress={() => setModalVisible(true)}
+          onPress={() => {
+            setEditingProfile(null);
+            setModalVisible(true);
+          }}
           accessibilityRole="button"
           accessibilityLabel="Add child profile"
         >
@@ -102,6 +142,8 @@ export default function ProfilesScreen() {
               key={profile.id}
               profile={profile}
               onToggle={handleToggle}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           ))}
         </View>
@@ -109,7 +151,11 @@ export default function ProfilesScreen() {
 
       <AddProfileModal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        editProfile={editingProfile}
+        onClose={() => {
+          setModalVisible(false);
+          setEditingProfile(null);
+        }}
         onSave={handleSave}
       />
     </View>

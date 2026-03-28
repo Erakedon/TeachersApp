@@ -33,7 +33,7 @@ export function rulesBasedScrub(profiles: ChildProfile[]): AnonymizedContext {
 
   active.forEach((profile, index) => {
     const key = `Child_${String.fromCharCode(65 + index)}`; // Child_A, Child_B, …
-    const tag = `[${key}: ${profile.condition}]`;
+    const tag = `[${key}: ${profile.conditionDescription}]`;
     tags.push(tag);
     mapping[key] = profile.name;
   });

@@ -116,9 +116,9 @@ function getUpcomingHoliday(): string | null {
 const SCRUB_SYSTEM_PROMPT = `You are a privacy assistant. Your ONLY job is to anonymize child profiles.
 Respond with ONLY a JSON object — no explanation, no markdown, no code fences.
 
-Given an array of profiles with "name" and "condition" fields, assign each child
+Given an array of profiles with "name" and "conditionDescription" fields, assign each child
 a sequential anonymous key (Child_A, Child_B, …) and output:
-{"tags":["[Child_A: ASD]"],"mapping":{"Child_A":"real name"}}`;
+{"tags":["[Child_A: <conditionDescription>]"],"mapping":{"Child_A":"real name"}}`;
 
 // ---------------------------------------------------------------------------
 // Main screen
@@ -149,6 +149,25 @@ export default function DayPlanScreen() {
       .then(setProfiles)
       .catch(() => setProfiles([]));
   }, [profileRepo]);
+
+  // Restore saved plan on mount
+  useEffect(() => {
+    if (!dateStr) return;
+    planRepo
+      .getByDate(dateStr)
+      .then((saved) => {
+        if (saved?.rawJson) {
+          try {
+            const parsed = JSON.parse(saved.rawJson) as LessonPlan;
+            setPlan(parsed);
+            setViewState("planned");
+          } catch {
+            // corrupted row — stay on unplanned
+          }
+        }
+      })
+      .catch(() => {});
+  }, [dateStr, planRepo]);
 
   // ── On-device LLM for PII scrubbing ──────────────────────────────────────
   // useLLM is safe inside a route screen — it is isolated from the navigation
@@ -193,7 +212,10 @@ export default function DayPlanScreen() {
       if (current.isReady && llmConfiguredRef.current) {
         try {
           const inputJson = JSON.stringify(
-            profiles.map((p) => ({ name: p.name, condition: p.condition })),
+            profiles.map((p) => ({
+              name: p.name,
+              conditionDescription: p.conditionDescription,
+            })),
           );
           const llmResponse = await current.sendMessage(
             `Anonymize these profiles: ${inputJson}`,

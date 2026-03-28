@@ -1,6 +1,6 @@
 import { type SQLiteDatabase } from "expo-sqlite";
 
-import { type ChildProfile, type ConditionType } from "@/types";
+import { type ChildProfile } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Row shape returned from the DB
@@ -9,9 +9,7 @@ import { type ChildProfile, type ConditionType } from "@/types";
 interface ProfileRow {
   id: string;
   name: string;
-  age: number | null;
-  condition: string;
-  notes: string | null;
+  condition_description: string;
   is_active: number;
   created_at: string;
   updated_at: string;
@@ -21,9 +19,7 @@ function rowToProfile(row: ProfileRow): ChildProfile {
   return {
     id: row.id,
     name: row.name,
-    age: row.age ?? undefined,
-    condition: row.condition as ConditionType,
-    notes: row.notes ?? undefined,
+    conditionDescription: row.condition_description,
     isActive: row.is_active === 1,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -57,19 +53,34 @@ export class ChildProfileRepository {
     const now = new Date().toISOString();
     await this.db.runAsync(
       `INSERT INTO child_profiles
-         (id, name, age, condition, notes, is_active, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         (id, name, condition_description, is_active, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?)`,
       [
         profile.id,
         profile.name,
-        profile.age ?? null,
-        profile.condition,
-        profile.notes ?? null,
+        profile.conditionDescription,
         profile.isActive ? 1 : 0,
         now,
         now,
       ],
     );
+  }
+
+  async update(
+    id: string,
+    fields: Pick<ChildProfile, "name" | "conditionDescription">,
+  ): Promise<void> {
+    const now = new Date().toISOString();
+    await this.db.runAsync(
+      `UPDATE child_profiles
+       SET name = ?, condition_description = ?, updated_at = ?
+       WHERE id = ?`,
+      [fields.name, fields.conditionDescription, now, id],
+    );
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.db.runAsync("DELETE FROM child_profiles WHERE id = ?", [id]);
   }
 
   async toggleActive(id: string): Promise<void> {

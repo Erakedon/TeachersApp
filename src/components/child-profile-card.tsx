@@ -1,48 +1,9 @@
 import React from "react";
-import { StyleSheet, Switch, Text, View } from "react-native";
+import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
 
-import { Icon, MaterialIconName } from "@/components/icon";
+import { Icon } from "@/components/icon";
 import { Colors, FontFamily, Radius, Spacing } from "@/constants/theme";
-import { type ChildProfile, type ConditionType } from "@/types";
-
-interface ConditionConfig {
-  icon: MaterialIconName;
-  avatarBg: string;
-  iconColor: string;
-  badgeBg: string;
-  badgeText: string;
-}
-
-const CONDITION_CONFIG: Record<ConditionType, ConditionConfig> = {
-  ASD: {
-    icon: "child-care",
-    avatarBg: "#ecfdf5", // emerald-50
-    iconColor: Colors.primary,
-    badgeBg: Colors.secondaryContainer,
-    badgeText: Colors.onSecondaryContainer,
-  },
-  "Severe Allergy": {
-    icon: "medical-services",
-    avatarBg: "#fff7ed", // orange-50
-    iconColor: "#c2410c", // orange-700
-    badgeBg: Colors.errorContainer,
-    badgeText: Colors.onErrorContainer,
-  },
-  ADHD: {
-    icon: "accessible-forward",
-    avatarBg: "#eff6ff", // blue-50
-    iconColor: "#1d4ed8", // blue-700
-    badgeBg: Colors.secondaryContainer,
-    badgeText: Colors.onSecondaryContainer,
-  },
-  Physical: {
-    icon: "blind",
-    avatarBg: "#faf5ff", // purple-50
-    iconColor: "#7e22ce", // purple-700
-    badgeBg: Colors.secondaryContainer,
-    badgeText: Colors.onSecondaryContainer,
-  },
-};
+import { type ChildProfile } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Component
@@ -51,52 +12,85 @@ const CONDITION_CONFIG: Record<ConditionType, ConditionConfig> = {
 interface ChildProfileCardProps {
   profile: ChildProfile;
   onToggle: (id: string, value: boolean) => void;
+  onEdit: (profile: ChildProfile) => void;
+  onDelete: (id: string) => void;
 }
 
-export function ChildProfileCard({ profile, onToggle }: ChildProfileCardProps) {
-  const cfg = CONDITION_CONFIG[profile.condition];
-
+export function ChildProfileCard({
+  profile,
+  onToggle,
+  onEdit,
+  onDelete,
+}: ChildProfileCardProps) {
   return (
     <View style={cardStyles.card}>
-      {/* Left: avatar + name + badge */}
-      <View style={cardStyles.left}>
-        <View style={[cardStyles.avatar, { backgroundColor: cfg.avatarBg }]}>
-          <Icon name={cfg.icon} size={22} color={cfg.iconColor} />
-        </View>
-        <View style={cardStyles.info}>
-          <Text style={cardStyles.name}>{profile.name}</Text>
-          <View style={cardStyles.badgeRow}>
-            <View style={[cardStyles.badge, { backgroundColor: cfg.badgeBg }]}>
-              <Text style={[cardStyles.badgeLabel, { color: cfg.badgeText }]}>
-                {profile.condition}
-              </Text>
-            </View>
-          </View>
-        </View>
+      {/* Avatar */}
+      <View style={cardStyles.avatar}>
+        <Icon name="child-care" size={22} color={Colors.primary} />
       </View>
 
-      {/* Right: toggle + status label */}
-      <View style={cardStyles.right}>
-        <Switch
-          value={profile.isActive}
-          onValueChange={(v) => onToggle(profile.id, v)}
-          trackColor={{ false: Colors.surfaceContainer, true: Colors.primary }}
-          thumbColor={Colors.surfaceContainerLowest}
-          ios_backgroundColor={Colors.surfaceContainer}
-          accessibilityLabel={`${profile.name} active status`}
-        />
-        <Text
-          style={[
-            cardStyles.statusLabel,
-            {
-              color: profile.isActive
-                ? Colors.primary
-                : Colors.onSurfaceVariant,
-            },
-          ]}
-        >
-          {profile.isActive ? "Active" : "Inactive"}
+      {/* Name + description */}
+      <View style={cardStyles.info}>
+        <Text style={cardStyles.name}>{profile.name}</Text>
+        <Text style={cardStyles.description} numberOfLines={2}>
+          {profile.conditionDescription}
         </Text>
+      </View>
+
+      {/* Controls */}
+      <View style={cardStyles.controls}>
+        {/* Active toggle */}
+        <View style={cardStyles.toggleGroup}>
+          <Switch
+            value={profile.isActive}
+            onValueChange={(v) => onToggle(profile.id, v)}
+            trackColor={{
+              false: Colors.surfaceContainer,
+              true: Colors.primary,
+            }}
+            thumbColor={Colors.surfaceContainerLowest}
+            ios_backgroundColor={Colors.surfaceContainer}
+            accessibilityLabel={`${profile.name} active status`}
+          />
+          <Text
+            style={[
+              cardStyles.statusLabel,
+              {
+                color: profile.isActive
+                  ? Colors.primary
+                  : Colors.onSurfaceVariant,
+              },
+            ]}
+          >
+            {profile.isActive ? "Active" : "Inactive"}
+          </Text>
+        </View>
+
+        {/* Edit / Delete */}
+        <View style={cardStyles.actionRow}>
+          <Pressable
+            onPress={() => onEdit(profile)}
+            hitSlop={8}
+            accessibilityLabel={`Edit ${profile.name}`}
+            style={({ pressed }) => [
+              cardStyles.iconBtn,
+              pressed && cardStyles.iconBtnPressed,
+            ]}
+          >
+            <Icon name="edit" size={18} color={Colors.onSurfaceVariant} />
+          </Pressable>
+          <Pressable
+            onPress={() => onDelete(profile.id)}
+            hitSlop={8}
+            accessibilityLabel={`Delete ${profile.name}`}
+            style={({ pressed }) => [
+              cardStyles.iconBtn,
+              pressed && cardStyles.iconBtnPressed,
+            ]}
+          >
+            <Icon name="delete" size={18} color={Colors.error} />
+          </Pressable>
+        </View>
       </View>
     </View>
   );
@@ -110,61 +104,65 @@ const cardStyles = StyleSheet.create({
   card: {
     backgroundColor: Colors.surfaceContainerLowest,
     borderRadius: Radius.md,
-    paddingHorizontal: Spacing.four,
+    paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.three,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-  },
-  left: {
-    flexDirection: "row",
-    alignItems: "center",
     gap: Spacing.three,
-    flex: 1,
   },
   avatar: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
+    borderRadius: Radius.full,
+    backgroundColor: "#ecfdf5",
+    justifyContent: "center",
+    alignItems: "center",
+    flexShrink: 0,
+  },
+  info: {
+    flex: 1,
+    gap: 2,
+  },
+  name: {
+    fontFamily: FontFamily.headlineMedium,
+    fontSize: 16,
+    lineHeight: 22,
+    color: Colors.onSurface,
+  },
+  description: {
+    fontFamily: FontFamily.body,
+    fontSize: 12,
+    lineHeight: 17,
+    color: Colors.onSurfaceVariant,
+  },
+  controls: {
+    alignItems: "center",
+    gap: Spacing.two,
+    flexShrink: 0,
+  },
+  toggleGroup: {
+    alignItems: "center",
+    gap: 2,
+  },
+  statusLabel: {
+    fontFamily: FontFamily.bodySemiBold,
+    fontSize: 9,
+    lineHeight: 13,
+    letterSpacing: 0.8,
+    textTransform: "uppercase",
+  },
+  actionRow: {
+    flexDirection: "row",
+    gap: Spacing.one,
+  },
+  iconBtn: {
+    width: 32,
+    height: 32,
     borderRadius: Radius.full,
     justifyContent: "center",
     alignItems: "center",
   },
-  info: {
-    gap: Spacing.one,
-    flex: 1,
-  },
-  name: {
-    fontFamily: FontFamily.headlineMedium,
-    fontSize: 17,
-    lineHeight: 24,
-    color: Colors.onSurface,
-  },
-  badgeRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: Spacing.one,
-  },
-  badge: {
-    borderRadius: Radius.full,
-    paddingHorizontal: Spacing.two,
-    paddingVertical: 2,
-  },
-  badgeLabel: {
-    fontFamily: FontFamily.bodySemiBold,
-    fontSize: 10,
-    lineHeight: 14,
-    letterSpacing: 1,
-    textTransform: "uppercase",
-  },
-  right: {
-    alignItems: "center",
-    gap: Spacing.one,
-  },
-  statusLabel: {
-    fontFamily: FontFamily.bodySemiBold,
-    fontSize: 10,
-    lineHeight: 14,
-    letterSpacing: 1,
-    textTransform: "uppercase",
+  iconBtnPressed: {
+    backgroundColor: Colors.surfaceContainerLow,
   },
 });

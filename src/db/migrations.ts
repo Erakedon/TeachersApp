@@ -43,6 +43,26 @@ const MIGRATIONS: { version: number; sql: string }[] = [
       );
     `,
   },
+  {
+    version: 2,
+    // Replace age/condition/notes with a single free-text conditionDescription.
+    // Migrate existing rows: use old condition value as the seed description.
+    sql: `
+      ALTER TABLE child_profiles RENAME TO child_profiles_v1;
+      CREATE TABLE child_profiles (
+        id                    TEXT PRIMARY KEY,
+        name                  TEXT NOT NULL,
+        condition_description TEXT NOT NULL DEFAULT '',
+        is_active             INTEGER NOT NULL DEFAULT 1,
+        created_at            TEXT NOT NULL,
+        updated_at            TEXT NOT NULL
+      );
+      INSERT INTO child_profiles (id, name, condition_description, is_active, created_at, updated_at)
+        SELECT id, name, COALESCE(condition, ''), is_active, created_at, updated_at
+        FROM child_profiles_v1;
+      DROP TABLE child_profiles_v1;
+    `,
+  },
 ];
 
 export async function runMigrations(db: SQLiteDatabase): Promise<void> {

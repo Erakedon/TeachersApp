@@ -4,14 +4,11 @@
 // Stage 6 repositories map DB rows to/from these shapes.
 // ---------------------------------------------------------------------------
 
-export type ConditionType = "ASD" | "Severe Allergy" | "ADHD" | "Physical";
-
 export interface ChildProfile {
   id: string; // UUID (text)
   name: string;
-  age?: number;
-  condition: ConditionType;
-  notes?: string;
+  /** Free-text description of the child's needs, used verbatim in AI prompts */
+  conditionDescription: string;
   isActive: boolean;
   createdAt: string; // ISO 8601
   updatedAt: string; // ISO 8601
