@@ -1,4 +1,4 @@
-﻿# Gentle Guardian — Teacher's AI Lesson Planner
+﻿# Teacher's App — Teacher's AI Lesson Planner
 
 A GDPR-compliant AI assistant for Polish preschool teachers (ages 3–6). It generates structured, curriculum-aligned daily lesson plans using Google Gemini, while keeping all child data strictly on-device.
 
