@@ -532,7 +532,6 @@ function PlannedView({
           ))}
         </View>
       </ScrollView>
-
     </>
   );
 }

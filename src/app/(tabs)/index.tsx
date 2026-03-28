@@ -1,11 +1,6 @@
 ﻿import { useSQLiteContext } from "expo-sqlite";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AppHeader } from "@/components/app-header";
@@ -13,12 +8,11 @@ import { MonthCalendar } from "@/components/month-calendar";
 import {
     BottomTabInset,
     Colors,
-    FontFamily,
     Spacing,
-    Typography,
+    Typography
 } from "@/constants/theme";
 import { useLanguage } from "@/contexts/language-context";
-import { DayPlanRepository } from "@/db/day-plan-repository"; 
+import { DayPlanRepository } from "@/db/day-plan-repository";
 
 // ---------------------------------------------------------------------------
 // Screen
