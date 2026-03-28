@@ -1,21 +1,21 @@
 import {
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    useFonts as useInterFonts,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  useFonts as useInterFonts,
 } from "@expo-google-fonts/inter";
 import {
-    PlusJakartaSans_400Regular,
-    PlusJakartaSans_600SemiBold,
-    PlusJakartaSans_700Bold,
-    PlusJakartaSans_800ExtraBold,
-    useFonts as usePlusJakartaSansFonts,
+  PlusJakartaSans_400Regular,
+  PlusJakartaSans_600SemiBold,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_800ExtraBold,
+  useFonts as usePlusJakartaSansFonts,
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
-import { SQLiteProvider, type SQLiteDatabase } from "expo-sqlite";
 import * as SplashScreen from "expo-splash-screen";
-import React, { Suspense, useEffect } from 'react';
+import { SQLiteProvider, type SQLiteDatabase } from "expo-sqlite";
+import React, { Suspense, useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AnimatedSplashOverlay } from "@/components/animated-icon";
@@ -37,7 +37,7 @@ SplashScreen.preventAutoHideAsync();
 // references across re-renders, which would synchronously update the
 // parent navigator state and cause an infinite render loop.
 const STACK_SCREEN_OPTIONS = { headerShown: false } as const;
-const DAY_PLAN_SCREEN_OPTIONS = { animation: 'slide_from_right' } as const;
+const DAY_PLAN_SCREEN_OPTIONS = { animation: "slide_from_right" } as const;
 
 const appTheme = {
   ...DefaultTheme,
@@ -111,4 +111,3 @@ export default function RootLayout() {
     </SafeAreaProvider>
   );
 }
-

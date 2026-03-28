@@ -7,7 +7,6 @@
  * to compile cleanly.
  */
 
-import React from 'react';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export function ModelDownloadBanner() {

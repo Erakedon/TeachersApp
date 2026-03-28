@@ -12,10 +12,10 @@
  * it can download and run completely independently of the navigation tree.
  */
 
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { createContext, useCallback, useContext } from "react";
 
-import { rulesBasedScrub } from '@/services/rule-based-anonymizer';
-import { type AnonymizedContext, type ChildProfile } from '@/types';
+import { rulesBasedScrub } from "@/services/rule-based-anonymizer";
+import { type AnonymizedContext, type ChildProfile } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Context shape
@@ -56,7 +56,7 @@ export function EdgeAIProvider({ children }: { children: React.ReactNode }) {
 export function useEdgeAI(): EdgeAIContextValue {
   const ctx = useContext(EdgeAIContext);
   if (!ctx) {
-    throw new Error('useEdgeAI must be used within an EdgeAIProvider');
+    throw new Error("useEdgeAI must be used within an EdgeAIProvider");
   }
   return ctx;
 }

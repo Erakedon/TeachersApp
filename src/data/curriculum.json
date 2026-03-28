@@ -1,0 +1,158 @@
+{
+    "description": "Polish Ministerstwo Edukacji Narodowej – Core Curriculum for Preschool Education (Podstawa programowa wychowania przedszkolnego)",
+    "areas": [
+        {
+            "code": "1",
+            "title": "Fizyczny obszar rozwoju dziecka",
+            "titleEn": "Physical development",
+            "points": [
+                {
+                    "code": "1.1",
+                    "pl": "Zgłasza potrzeby fizjologiczne, samodzielnie wykonuje podstawowe czynności higieniczne.",
+                    "en": "Reports physiological needs, independently performs basic hygiene activities."
+                },
+                {
+                    "code": "1.2",
+                    "pl": "Wykonuje czynności samoobsługowe: ubieranie się i rozbieranie, w tym czynności precyzyjne.",
+                    "en": "Performs self-care activities including dressing and fine motor tasks."
+                },
+                {
+                    "code": "1.3",
+                    "pl": "Spożywa posiłki z użyciem sztućców, sprząta po sobie.",
+                    "en": "Eats meals using cutlery and tidies up after themselves."
+                },
+                {
+                    "code": "1.4",
+                    "pl": "Komunikuje potrzebę ruchu, odpoczynku.",
+                    "en": "Communicates the need for movement and rest."
+                },
+                {
+                    "code": "1.5",
+                    "pl": "Uczestniczy w zabawach ruchowych, w tym rytmicznych, muzycznych, naśladowczych.",
+                    "en": "Participates in physical activities including rhythmic, musical and imitative play."
+                }
+            ]
+        },
+        {
+            "code": "2",
+            "title": "Emocjonalny obszar rozwoju dziecka",
+            "titleEn": "Emotional development",
+            "points": [
+                {
+                    "code": "2.1",
+                    "pl": "Rozpoznaje i nazywa podstawowe emocje, próbuje radzić sobie z ich przeżywaniem.",
+                    "en": "Recognises and names basic emotions, attempts to cope with experiencing them."
+                },
+                {
+                    "code": "2.2",
+                    "pl": "Szanuje emocje swoje i innych osób.",
+                    "en": "Respects their own emotions and those of others."
+                },
+                {
+                    "code": "2.3",
+                    "pl": "Przeżywa emocje w sposób umożliwiający mu adaptację w nowym otoczeniu.",
+                    "en": "Experiences emotions in a way that enables adaptation to new surroundings."
+                },
+                {
+                    "code": "2.4",
+                    "pl": "Przedstawia swoje emocje i uczucia używając charakterystycznych dla sztuki środków wyrazu.",
+                    "en": "Expresses emotions using artistic means of expression."
+                },
+                {
+                    "code": "2.5",
+                    "pl": "Rozróżnia emocje i uczucia przyjemne i nieprzyjemne, ma świadomość, że odczuwanie przyjemnych i nieprzyjemnych emocji jest prawem człowieka.",
+                    "en": "Distinguishes pleasant and unpleasant emotions, understands that experiencing both is a human right."
+                }
+            ]
+        },
+        {
+            "code": "3",
+            "title": "Społeczny obszar rozwoju dziecka",
+            "titleEn": "Social development",
+            "points": [
+                {
+                    "code": "3.1",
+                    "pl": "Przejawia poczucie własnej wartości jako osoby, wyraża szacunek wobec innych osób i przestrzega reguł.",
+                    "en": "Shows self-worth as a person, expresses respect for others and observes rules."
+                },
+                {
+                    "code": "3.2",
+                    "pl": "Odgrywa role w zabawach parateatralnych, posługując się mową, mimiką, gestem i ruchem.",
+                    "en": "Plays roles in dramatic play using speech, facial expression, gesture and movement."
+                },
+                {
+                    "code": "3.3",
+                    "pl": "Używa zwrotów grzecznościowych podczas powitania, pożegnania, na prośbę, przy stole.",
+                    "en": "Uses polite forms of address when greeting, saying goodbye, when asking and at the table."
+                },
+                {
+                    "code": "3.4",
+                    "pl": "Ocenia swoje zachowanie w kontekście podjętych czynności i zadań oraz przyjętych norm grupowych.",
+                    "en": "Evaluates their behaviour in the context of activities and group norms."
+                },
+                {
+                    "code": "3.5",
+                    "pl": "Tworzy informacje dla innych w formie rysunku lub zapisu.",
+                    "en": "Creates information for others in the form of drawing or writing."
+                }
+            ]
+        },
+        {
+            "code": "4",
+            "title": "Poznawczy obszar rozwoju dziecka",
+            "titleEn": "Cognitive development",
+            "points": [
+                {
+                    "code": "4.1",
+                    "pl": "Wyraża swoje rozumienie świata, zjawisk i rzeczy znajdujących się w bliskim otoczeniu za pomocą komunikatów pozawerbalnych: gestykulacji, pantomimy, rysunku, muzyki i words innych form ekspresji plastycznej.",
+                    "en": "Expresses understanding of the world through non-verbal communication: gesture, mime, drawing, music and other artistic forms."
+                },
+                {
+                    "code": "4.2",
+                    "pl": "Wyraża swoje rozumienie świata, zjawisk i rzeczy znajdujących się w bliskim otoczeniu za pomocą języka mówionego.",
+                    "en": "Expresses understanding of the world through spoken language."
+                },
+                {
+                    "code": "4.3",
+                    "pl": "Pyta, obserwuje, eksperymentuje, wyciąga wnioski i podejmuje działania.",
+                    "en": "Questions, observes, experiments, draws conclusions and takes action."
+                },
+                {
+                    "code": "4.4",
+                    "pl": "Słucha różnorodnych tekstów, recytuje wierszyki, układa i opowiada historyjki.",
+                    "en": "Listens to diverse texts, recites rhymes, creates and tells stories."
+                },
+                {
+                    "code": "4.5",
+                    "pl": "Eksperymentuje rytmem, głosem, dźwiękami i ruchem, rozwijając swoją wrażliwość muzyczną i plastyczną.",
+                    "en": "Experiments with rhythm, voice, sounds and movement, developing musical and artistic sensitivity."
+                },
+                {
+                    "code": "4.6",
+                    "pl": "Tworzy muzykę: gra na instrumentach, śpiewa piosenki, wykonuje pląsy.",
+                    "en": "Creates music: plays instruments, sings songs, performs dances."
+                },
+                {
+                    "code": "4.7",
+                    "pl": "Eksperymentuje z różnymi technikami plastycznymi: maluje, rysuje, lepi, wykrawa, skleja.",
+                    "en": "Experiments with artistic techniques: painting, drawing, modelling, cutting, gluing."
+                },
+                {
+                    "code": "4.8",
+                    "pl": "Wykonuje eksperymenty językowe, nadaje znaczenie czynnościom, nazywa je, tworzy żarty językowe, tworzy neologizmy.",
+                    "en": "Conducts language experiments, names actions, creates linguistic jokes and neologisms."
+                },
+                {
+                    "code": "4.9",
+                    "pl": "Liczy obiekty i rozróżnia błędne liczenie od poprawnego.",
+                    "en": "Counts objects and distinguishes incorrect from correct counting."
+                },
+                {
+                    "code": "4.10",
+                    "pl": "Wyznacza wynik dodawania i odejmowania, pomagając sobie liczeniem na palcach lub na innych obiektach.",
+                    "en": "Determines results of addition and subtraction using fingers or objects."
+                }
+            ]
+        }
+    ]
+}

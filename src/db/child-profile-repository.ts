@@ -1,6 +1,6 @@
-import { type SQLiteDatabase } from 'expo-sqlite';
+import { type SQLiteDatabase } from "expo-sqlite";
 
-import { type ChildProfile, type ConditionType } from '@/types';
+import { type ChildProfile, type ConditionType } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Row shape returned from the DB
@@ -39,19 +39,21 @@ export class ChildProfileRepository {
 
   async getAll(): Promise<ChildProfile[]> {
     const rows = await this.db.getAllAsync<ProfileRow>(
-      'SELECT * FROM child_profiles ORDER BY created_at DESC',
+      "SELECT * FROM child_profiles ORDER BY created_at DESC",
     );
     return rows.map(rowToProfile);
   }
 
   async getActiveProfiles(): Promise<ChildProfile[]> {
     const rows = await this.db.getAllAsync<ProfileRow>(
-      'SELECT * FROM child_profiles WHERE is_active = 1 ORDER BY created_at DESC',
+      "SELECT * FROM child_profiles WHERE is_active = 1 ORDER BY created_at DESC",
     );
     return rows.map(rowToProfile);
   }
 
-  async insert(profile: Omit<ChildProfile, 'createdAt' | 'updatedAt'>): Promise<void> {
+  async insert(
+    profile: Omit<ChildProfile, "createdAt" | "updatedAt">,
+  ): Promise<void> {
     const now = new Date().toISOString();
     await this.db.runAsync(
       `INSERT INTO child_profiles
@@ -84,7 +86,7 @@ export class ChildProfileRepository {
   async setActive(id: string, isActive: boolean): Promise<void> {
     const now = new Date().toISOString();
     await this.db.runAsync(
-      'UPDATE child_profiles SET is_active = ?, updated_at = ? WHERE id = ?',
+      "UPDATE child_profiles SET is_active = ?, updated_at = ? WHERE id = ?",
       [isActive ? 1 : 0, now, id],
     );
   }

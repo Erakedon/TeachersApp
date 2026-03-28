@@ -89,7 +89,9 @@ export function ChildProfileCard({ profile, onToggle }: ChildProfileCardProps) {
           style={[
             cardStyles.statusLabel,
             {
-              color: profile.isActive ? Colors.primary : Colors.onSurfaceVariant,
+              color: profile.isActive
+                ? Colors.primary
+                : Colors.onSurfaceVariant,
             },
           ]}
         >

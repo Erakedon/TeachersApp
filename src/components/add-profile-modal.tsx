@@ -12,9 +12,9 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { type ConditionType } from "@/types";
 import { Icon } from "@/components/icon";
 import { Colors, FontFamily, Radius, Spacing } from "@/constants/theme";
+import { type ConditionType } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -23,7 +23,12 @@ import { Colors, FontFamily, Radius, Spacing } from "@/constants/theme";
 interface AddProfileModalProps {
   visible: boolean;
   onClose: () => void;
-  onSave: (draft: { name: string; age?: number; condition: ConditionType; notes?: string }) => void;
+  onSave: (draft: {
+    name: string;
+    age?: number;
+    condition: ConditionType;
+    notes?: string;
+  }) => void;
 }
 
 const CONDITIONS: ConditionType[] = [

@@ -1,6 +1,6 @@
-import { type SQLiteDatabase } from 'expo-sqlite';
+import { type SQLiteDatabase } from "expo-sqlite";
 
-import { type PendingTask, type TaskPriority } from '@/types';
+import { type PendingTask, type TaskPriority } from "@/types";
 
 interface TaskRow {
   id: string;
@@ -25,27 +25,36 @@ export class PendingTaskRepository {
 
   async getAll(): Promise<PendingTask[]> {
     const rows = await this.db.getAllAsync<TaskRow>(
-      'SELECT * FROM pending_tasks ORDER BY created_at ASC',
+      "SELECT * FROM pending_tasks ORDER BY created_at ASC",
     );
     return rows.map(rowToTask);
   }
 
   async getIncomplete(): Promise<PendingTask[]> {
     const rows = await this.db.getAllAsync<TaskRow>(
-      'SELECT * FROM pending_tasks WHERE is_done = 0 ORDER BY created_at ASC',
+      "SELECT * FROM pending_tasks WHERE is_done = 0 ORDER BY created_at ASC",
     );
     return rows.map(rowToTask);
   }
 
-  async insert(task: Omit<PendingTask, 'createdAt'>): Promise<void> {
+  async insert(task: Omit<PendingTask, "createdAt">): Promise<void> {
     await this.db.runAsync(
       `INSERT INTO pending_tasks (id, description, priority, is_done, created_at)
        VALUES (?, ?, ?, ?, ?)`,
-      [task.id, task.description, task.priority, task.isDone ? 1 : 0, new Date().toISOString()],
+      [
+        task.id,
+        task.description,
+        task.priority,
+        task.isDone ? 1 : 0,
+        new Date().toISOString(),
+      ],
     );
   }
 
   async markDone(id: string): Promise<void> {
-    await this.db.runAsync('UPDATE pending_tasks SET is_done = 1 WHERE id = ?', [id]);
+    await this.db.runAsync(
+      "UPDATE pending_tasks SET is_done = 1 WHERE id = ?",
+      [id],
+    );
   }
 }

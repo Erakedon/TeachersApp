@@ -6,16 +6,16 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AddProfileModal } from "@/components/add-profile-modal";
 import { ChildProfileCard } from "@/components/child-profile-card";
 import { Icon } from "@/components/icon";
+import {
+    BottomTabInset,
+    Colors,
+    FontFamily,
+    Radius,
+    Spacing,
+    Typography,
+} from "@/constants/theme";
 import { ChildProfileRepository } from "@/db/child-profile-repository";
 import { type ChildProfile, type ConditionType } from "@/types";
-import {
-  BottomTabInset,
-  Colors,
-  FontFamily,
-  Radius,
-  Spacing,
-  Typography,
-} from "@/constants/theme";
 
 // ---------------------------------------------------------------------------
 // Screen
@@ -42,7 +42,12 @@ export default function ProfilesScreen() {
     await loadProfiles();
   }
 
-  async function handleSave(draft: { name: string; age?: number; condition: ConditionType; notes?: string }) {
+  async function handleSave(draft: {
+    name: string;
+    age?: number;
+    condition: ConditionType;
+    notes?: string;
+  }) {
     await repo.insert({
       id: Date.now().toString(),
       isActive: true,

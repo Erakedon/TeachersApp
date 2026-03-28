@@ -4,28 +4,28 @@
 // Stage 6 repositories map DB rows to/from these shapes.
 // ---------------------------------------------------------------------------
 
-export type ConditionType = 'ASD' | 'Severe Allergy' | 'ADHD' | 'Physical';
+export type ConditionType = "ASD" | "Severe Allergy" | "ADHD" | "Physical";
 
 export interface ChildProfile {
-  id: string;           // UUID (text)
+  id: string; // UUID (text)
   name: string;
   age?: number;
   condition: ConditionType;
   notes?: string;
   isActive: boolean;
-  createdAt: string;    // ISO 8601
-  updatedAt: string;    // ISO 8601
+  createdAt: string; // ISO 8601
+  updatedAt: string; // ISO 8601
 }
 
 export interface DayPlan {
   id: string;
-  date: string;         // 'YYYY-MM-DD'
+  date: string; // 'YYYY-MM-DD'
   topic?: string;
-  rawJson: string;      // serialised Gemini response
+  rawJson: string; // serialised Gemini response
   createdAt: string;
 }
 
-export type TaskPriority = 'urgent' | 'normal';
+export type TaskPriority = "urgent" | "normal";
 
 export interface PendingTask {
   id: string;
@@ -58,4 +58,39 @@ export interface AnonymizedContext {
   privacyMap: PrivacyMap;
   /** Comma-separated tag string ready to inject into the Gemini prompt. */
   tagSummary: string;
+}
+
+// ---------------------------------------------------------------------------
+// Stage 8 — Lesson Plan types (Gemini API response shape)
+// ---------------------------------------------------------------------------
+
+export interface SpecialNeedsAdaptations {
+  /** Key is anonymous tag e.g. "[Child_A: ASD]", value is the adaptation text */
+  [tag: string]: string;
+}
+
+export interface Activity {
+  title: string;
+  durationMinutes: number;
+  /** "HH:MM" 24-hour string */
+  timeSlot: string;
+  description: string;
+  pedagogicalGoals: string[];
+  /** Polish core curriculum point codes e.g. ["4.1", "4.2"] */
+  curriculumPoints: string[];
+  /** Null/absent when no special-needs profiles in group */
+  specialNeedsAdaptations?: SpecialNeedsAdaptations;
+}
+
+export interface LessonPlan {
+  suggestedTopic: string;
+  activities: Activity[];
+}
+
+export interface GenerationParams {
+  date: string; // 'YYYY-MM-DD'
+  topic?: string; // user-supplied or blank → AI suggests
+  season: string;
+  tagSummary: string; // anonymized profile tags
+  privacyMap: PrivacyMap; // kept in memory for post-remap
 }

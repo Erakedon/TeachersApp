@@ -1,4 +1,4 @@
-import { type SQLiteDatabase } from 'expo-sqlite';
+import { type SQLiteDatabase } from "expo-sqlite";
 
 // ---------------------------------------------------------------------------
 // Schema migrations
@@ -55,7 +55,7 @@ export async function runMigrations(db: SQLiteDatabase): Promise<void> {
   `);
 
   const applied = await db.getAllAsync<{ version: number }>(
-    'SELECT version FROM schema_migrations ORDER BY version ASC',
+    "SELECT version FROM schema_migrations ORDER BY version ASC",
   );
   const appliedVersions = new Set(applied.map((r) => r.version));
 
@@ -64,7 +64,7 @@ export async function runMigrations(db: SQLiteDatabase): Promise<void> {
 
     await db.execAsync(migration.sql);
     await db.runAsync(
-      'INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)',
+      "INSERT INTO schema_migrations (version, applied_at) VALUES (?, ?)",
       [migration.version, new Date().toISOString()],
     );
   }
@@ -76,7 +76,7 @@ export async function runMigrations(db: SQLiteDatabase): Promise<void> {
 
 export async function seedInitialData(db: SQLiteDatabase): Promise<void> {
   const existing = await db.getFirstAsync<{ cnt: number }>(
-    'SELECT COUNT(*) as cnt FROM pending_tasks',
+    "SELECT COUNT(*) as cnt FROM pending_tasks",
   );
   if (existing && existing.cnt > 0) return; // already seeded
 
@@ -84,11 +84,11 @@ export async function seedInitialData(db: SQLiteDatabase): Promise<void> {
   await db.runAsync(
     `INSERT INTO pending_tasks (id, description, priority, is_done, created_at)
      VALUES (?, ?, ?, 0, ?)`,
-    ['task-1', 'Finalize sensory play materials for Thursday', 'urgent', now],
+    ["task-1", "Finalize sensory play materials for Thursday", "urgent", now],
   );
   await db.runAsync(
     `INSERT INTO pending_tasks (id, description, priority, is_done, created_at)
      VALUES (?, ?, ?, 0, ?)`,
-    ['task-2', 'Log afternoon snacks for Blue Group', 'normal', now],
+    ["task-2", "Log afternoon snacks for Blue Group", "normal", now],
   );
 }

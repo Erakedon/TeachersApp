@@ -12,7 +12,11 @@
  *     response arrives.
  */
 
-import { type AnonymizedContext, type ChildProfile, type PrivacyMap } from '@/types';
+import {
+    type AnonymizedContext,
+    type ChildProfile,
+    type PrivacyMap,
+} from "@/types";
 
 export function rulesBasedScrub(profiles: ChildProfile[]): AnonymizedContext {
   const active = profiles.filter((p) => p.isActive);
@@ -20,7 +24,7 @@ export function rulesBasedScrub(profiles: ChildProfile[]): AnonymizedContext {
   if (active.length === 0) {
     return {
       privacyMap: { tags: [], mapping: {} },
-      tagSummary: 'No children with special requirements in the group.',
+      tagSummary: "No children with special requirements in the group.",
     };
   }
 
@@ -35,7 +39,7 @@ export function rulesBasedScrub(profiles: ChildProfile[]): AnonymizedContext {
   });
 
   const privacyMap: PrivacyMap = { tags, mapping };
-  const tagSummary = tags.join(', ');
+  const tagSummary = tags.join(", ");
 
   return { privacyMap, tagSummary };
 }

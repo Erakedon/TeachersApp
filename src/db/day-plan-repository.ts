@@ -1,6 +1,6 @@
-import { type SQLiteDatabase } from 'expo-sqlite';
+import { type SQLiteDatabase } from "expo-sqlite";
 
-import { type DayPlan } from '@/types';
+import { type DayPlan } from "@/types";
 
 interface DayPlanRow {
   id: string;
@@ -25,7 +25,7 @@ export class DayPlanRepository {
 
   async getByDate(date: string): Promise<DayPlan | null> {
     const row = await this.db.getFirstAsync<DayPlanRow>(
-      'SELECT * FROM day_plans WHERE date = ?',
+      "SELECT * FROM day_plans WHERE date = ?",
       [date],
     );
     return row ? rowToPlan(row) : null;
@@ -34,7 +34,7 @@ export class DayPlanRepository {
   /** Returns all stored YYYY-MM-DD date strings that have a saved plan. */
   async getAllDates(): Promise<string[]> {
     const rows = await this.db.getAllAsync<{ date: string }>(
-      'SELECT date FROM day_plans ORDER BY date ASC',
+      "SELECT date FROM day_plans ORDER BY date ASC",
     );
     return rows.map((r) => r.date);
   }
@@ -51,6 +51,6 @@ export class DayPlanRepository {
   }
 
   async delete(date: string): Promise<void> {
-    await this.db.runAsync('DELETE FROM day_plans WHERE date = ?', [date]);
+    await this.db.runAsync("DELETE FROM day_plans WHERE date = ?", [date]);
   }
 }
