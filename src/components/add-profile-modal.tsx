@@ -13,6 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Icon } from "@/components/icon";
 import { Colors, FontFamily, Radius, Spacing } from "@/constants/theme";
+import { useLanguage } from "@/contexts/language-context";
 import { type ChildProfile } from "@/types";
 
 // ---------------------------------------------------------------------------
@@ -39,6 +40,7 @@ export function AddProfileModal({
 }: AddProfileModalProps) {
   const insets = useSafeAreaInsets();
   const isEdit = !!editProfile;
+  const { t } = useLanguage();
 
   const [name, setName] = useState("");
   const [conditionDescription, setConditionDescription] = useState("");
@@ -62,9 +64,9 @@ export function AddProfileModal({
 
   function validate(): boolean {
     const next: typeof errors = {};
-    if (!name.trim()) next.name = "Name is required.";
+    if (!name.trim()) next.name = t.nameRequired;
     if (!conditionDescription.trim()) {
-      next.conditionDescription = "Please describe the child's special needs.";
+      next.conditionDescription = t.conditionDescriptionRequired;
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -106,12 +108,12 @@ export function AddProfileModal({
           {/* Header */}
           <View style={styles.sheetHeader}>
             <Text style={styles.sheetTitle}>
-              {isEdit ? "Edit Child Profile" : "Add Child Profile"}
+              {isEdit ? t.editChildProfile : t.addChildProfile}
             </Text>
             <Pressable
               onPress={handleClose}
               hitSlop={12}
-              accessibilityLabel="Close"
+              accessibilityLabel={t.close}
               style={({ pressed }) => [
                 styles.closeBtn,
                 pressed && styles.closeBtnPressed,
@@ -129,19 +131,19 @@ export function AddProfileModal({
           >
             {/* Name */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Child's Name</Text>
+              <Text style={styles.label}>{t.childName}</Text>
               <TextInput
                 style={[styles.input, errors.name && styles.inputError]}
                 value={name}
-                onChangeText={(t) => {
-                  setName(t);
+                onChangeText={(v) => {
+                  setName(v);
                   setErrors((e) => ({ ...e, name: undefined }));
                 }}
-                placeholder="e.g. Leo"
+                placeholder={t.childNamePlaceholder}
                 placeholderTextColor={Colors.outlineVariant}
                 autoCapitalize="words"
                 returnKeyType="next"
-                accessibilityLabel="Child name"
+                accessibilityLabel={t.childName}
               />
               {errors.name && (
                 <Text style={styles.errorText}>{errors.name}</Text>
@@ -150,11 +152,8 @@ export function AddProfileModal({
 
             {/* Condition description */}
             <View style={styles.fieldGroup}>
-              <Text style={styles.label}>Condition Description</Text>
-              <Text style={styles.hint}>
-                Describe the child's needs in your own words. This text is
-                anonymised before being sent to AI.
-              </Text>
+              <Text style={styles.label}>{t.conditionDescription}</Text>
+              <Text style={styles.hint}>{t.conditionDescriptionHint}</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -162,16 +161,16 @@ export function AddProfileModal({
                   errors.conditionDescription && styles.inputError,
                 ]}
                 value={conditionDescription}
-                onChangeText={(t) => {
-                  setConditionDescription(t);
+                onChangeText={(v) => {
+                  setConditionDescription(v);
                   setErrors((e) => ({ ...e, conditionDescription: undefined }));
                 }}
-                placeholder="e.g. Moves by wheelchair, needs ramp access and extended time for transitions"
+                placeholder={t.conditionDescriptionPlaceholder}
                 placeholderTextColor={Colors.outlineVariant}
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
-                accessibilityLabel="Condition description"
+                accessibilityLabel={t.conditionDescription}
               />
               {errors.conditionDescription && (
                 <Text style={styles.errorText}>
@@ -191,7 +190,7 @@ export function AddProfileModal({
               onPress={handleClose}
               accessibilityRole="button"
             >
-              <Text style={styles.btnCancelLabel}>Cancel</Text>
+              <Text style={styles.btnCancelLabel}>{t.cancel}</Text>
             </Pressable>
             <Pressable
               style={({ pressed }) => [
@@ -202,7 +201,7 @@ export function AddProfileModal({
               accessibilityRole="button"
             >
               <Text style={styles.btnSaveLabel}>
-                {isEdit ? "Save Changes" : "Save Profile"}
+                {isEdit ? t.saveChanges : t.saveProfile}
               </Text>
             </Pressable>
           </View>

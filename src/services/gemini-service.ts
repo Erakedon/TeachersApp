@@ -32,8 +32,12 @@ function buildPrompt(params: GenerationParams): string {
     ? `Special needs in group: ${params.tagSummary}`
     : "Special needs in group: none";
 
+  const langLine =
+    params.languageInstruction ?? "Odpowiadaj wyłącznie po polsku.";
+
   return `You are an expert Polish preschool pedagogical assistant (ages 3-6).
 Generate a detailed chronological lesson plan for ${params.date}.
+${langLine}
 
 Context:
 - ${topicLine}

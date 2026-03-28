@@ -90,4 +90,5 @@ export interface GenerationParams {
   season: string;
   tagSummary: string; // anonymized profile tags
   privacyMap: PrivacyMap; // kept in memory for post-remap
+  languageInstruction?: string; // e.g. "Respond entirely in English."
 }

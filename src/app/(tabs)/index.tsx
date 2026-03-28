@@ -20,6 +20,7 @@ import {
     Spacing,
     Typography,
 } from "@/constants/theme";
+import { useLanguage } from "@/contexts/language-context";
 import { DayPlanRepository } from "@/db/day-plan-repository";
 import { PendingTaskRepository } from "@/db/pending-task-repository";
 import { type PendingTask } from "@/types";
@@ -35,6 +36,7 @@ export default function DashboardScreen() {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const isWide = width >= 600;
+  const { t } = useLanguage();
 
   const [planDates, setPlanDates] = useState(new Set<string>());
   const [tasks, setTasks] = useState<PendingTask[]>([]);
@@ -65,10 +67,8 @@ export default function DashboardScreen() {
       >
         {/* Page header */}
         <View style={styles.pageHeader}>
-          <Text style={styles.title}>Dashboard</Text>
-          <Text style={styles.subtitle}>
-            Organize your month and nurture curiosity with AI-guided lessons.
-          </Text>
+          <Text style={styles.title}>{t.dashboard}</Text>
+          <Text style={styles.subtitle}>{t.dashboardSubtitle}</Text>
         </View>
 
         {/* Bento grid: calendar (left/top) + sidebar (right/bottom) */}
@@ -94,16 +94,14 @@ export default function DashboardScreen() {
 // ---------------------------------------------------------------------------
 
 function AssistantTipCard() {
+  const { t } = useLanguage();
   return (
     <View style={tipStyles.card}>
       <View style={tipStyles.headerRow}>
         <Icon name="lightbulb-outline" size={20} color={Colors.secondary} />
-        <Text style={tipStyles.title}>Assistant Tip</Text>
+        <Text style={tipStyles.title}>{t.assistantTip}</Text>
       </View>
-      <Text style={tipStyles.body}>
-        Most students are curious about {'"'}Autumn Leaves{'"'} this week based
-        on recent observations.
-      </Text>
+      <Text style={tipStyles.body}>{t.assistantTipBody}</Text>
     </View>
   );
 }
@@ -113,11 +111,12 @@ function AssistantTipCard() {
 // ---------------------------------------------------------------------------
 
 function PendingTasksPanel({ tasks }: { tasks: PendingTask[] }) {
+  const { t } = useLanguage();
   return (
     <View style={tasksStyles.card}>
-      <Text style={tasksStyles.heading}>Pending Tasks</Text>
+      <Text style={tasksStyles.heading}>{t.pendingTasks}</Text>
       {tasks.length === 0 ? (
-        <Text style={tasksStyles.emptyText}>No pending tasks – all clear!</Text>
+        <Text style={tasksStyles.emptyText}>{t.noTasks}</Text>
       ) : (
         tasks.map((t) => (
           <TaskRow

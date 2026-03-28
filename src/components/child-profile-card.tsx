@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Switch, Text, View } from "react-native";
 
 import { Icon } from "@/components/icon";
 import { Colors, FontFamily, Radius, Spacing } from "@/constants/theme";
+import { useLanguage } from "@/contexts/language-context";
 import { type ChildProfile } from "@/types";
 
 // ---------------------------------------------------------------------------
@@ -22,6 +23,7 @@ export function ChildProfileCard({
   onEdit,
   onDelete,
 }: ChildProfileCardProps) {
+  const { t } = useLanguage();
   return (
     <View style={cardStyles.card}>
       {/* Avatar */}
@@ -62,7 +64,7 @@ export function ChildProfileCard({
               },
             ]}
           >
-            {profile.isActive ? "Active" : "Inactive"}
+            {profile.isActive ? t.active : t.inactive}
           </Text>
         </View>
 
@@ -71,7 +73,7 @@ export function ChildProfileCard({
           <Pressable
             onPress={() => onEdit(profile)}
             hitSlop={8}
-            accessibilityLabel={`Edit ${profile.name}`}
+            accessibilityLabel={`${t.edit} ${profile.name}`}
             style={({ pressed }) => [
               cardStyles.iconBtn,
               pressed && cardStyles.iconBtnPressed,
@@ -82,7 +84,7 @@ export function ChildProfileCard({
           <Pressable
             onPress={() => onDelete(profile.id)}
             hitSlop={8}
-            accessibilityLabel={`Delete ${profile.name}`}
+            accessibilityLabel={`${t.delete} ${profile.name}`}
             style={({ pressed }) => [
               cardStyles.iconBtn,
               pressed && cardStyles.iconBtnPressed,

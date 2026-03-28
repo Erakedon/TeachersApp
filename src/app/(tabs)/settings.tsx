@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AppHeader } from "@/components/app-header";
@@ -11,8 +11,11 @@ import {
     Spacing,
     Typography,
 } from "@/constants/theme";
+import { useLanguage, type Language } from "@/contexts/language-context";
 
 export default function SettingsScreen() {
+  const { t, language, setLanguage } = useLanguage();
+
   return (
     <View style={styles.container}>
       <AppHeader />
@@ -21,31 +24,58 @@ export default function SettingsScreen() {
           contentContainerStyle={styles.content}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.title}>Ustawienia</Text>
-          <Text style={styles.subtitle}>Informacje o aplikacji</Text>
+          <Text style={styles.title}>{t.settings}</Text>
+          <Text style={styles.subtitle}>{t.appInfo}</Text>
+
+          {/* Language picker card */}
+          <View style={styles.statusCard}>
+            <View style={styles.statusRow}>
+              <Icon name="language" size={20} color={Colors.primary} />
+              <Text style={styles.statusTitle}>{t.language}</Text>
+            </View>
+            <Text style={styles.langLabel}>{t.languageLabel}</Text>
+            <View style={styles.langPillRow}>
+              {(["pl", "en"] as Language[]).map((lang) => (
+                <Pressable
+                  key={lang}
+                  style={({ pressed }) => [
+                    styles.langPill,
+                    language === lang && styles.langPillActive,
+                    pressed && { opacity: 0.8 },
+                  ]}
+                  onPress={() => setLanguage(lang)}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: language === lang }}
+                >
+                  <Text
+                    style={[
+                      styles.langPillLabel,
+                      language === lang && styles.langPillLabelActive,
+                    ]}
+                  >
+                    {lang === "pl" ? "🇵🇱  Polski" : "🇬🇧  English"}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
 
           {/* AI status card */}
           <View style={styles.statusCard}>
             <View style={styles.statusRow}>
               <Icon name="auto-fix-high" size={20} color={Colors.primary} />
-              <Text style={styles.statusTitle}>AI Gemini</Text>
+              <Text style={styles.statusTitle}>{t.aiStatus}</Text>
               <View style={styles.activeBadge}>
-                <Text style={styles.activeBadgeText}>Aktywny</Text>
+                <Text style={styles.activeBadgeText}>{t.aiActive}</Text>
               </View>
             </View>
-            <Text style={styles.statusBody}>
-              Plany lekcji są generowane przez Google Gemini 2.0 Flash. Model
-              odpowiada w ciągu kilku sekund.
-            </Text>
+            <Text style={styles.statusBody}>{t.aiStatusBody}</Text>
           </View>
 
           {/* Privacy note */}
           <View style={styles.privacyCard}>
             <Icon name="lock-outline" size={16} color={Colors.secondary} />
-            <Text style={styles.privacyText}>
-              Imiona dzieci nigdy nie są wysyłane do chmury. Przed każdym
-              wywołaniem AI dane są anonimizowane na urządzeniu.
-            </Text>
+            <Text style={styles.privacyText}>{t.privacyNote}</Text>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -115,6 +145,38 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 20,
     color: Colors.onSurfaceVariant,
+  },
+  langLabel: {
+    fontFamily: FontFamily.body,
+    fontSize: 13,
+    lineHeight: 20,
+    color: Colors.onSurfaceVariant,
+  },
+  langPillRow: {
+    flexDirection: "row",
+    gap: Spacing.two,
+  },
+  langPill: {
+    flex: 1,
+    paddingVertical: Spacing.two + 2,
+    paddingHorizontal: Spacing.three,
+    borderRadius: Radius.full,
+    borderWidth: 1.5,
+    borderColor: Colors.outlineVariant,
+    alignItems: "center",
+  },
+  langPillActive: {
+    backgroundColor: Colors.primaryContainer,
+    borderColor: Colors.primary,
+  },
+  langPillLabel: {
+    fontFamily: FontFamily.bodySemiBold,
+    fontSize: 13,
+    lineHeight: 20,
+    color: Colors.onSurfaceVariant,
+  },
+  langPillLabelActive: {
+    color: Colors.primary,
   },
   privacyCard: {
     flexDirection: "row",

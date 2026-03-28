@@ -21,6 +21,7 @@ import {
     Spacing,
     Typography,
 } from "@/constants/theme";
+import { useLanguage } from "@/contexts/language-context";
 import { ChildProfileRepository } from "@/db/child-profile-repository";
 import { type ChildProfile } from "@/types";
 
@@ -37,6 +38,7 @@ export default function ProfilesScreen() {
   const [editingProfile, setEditingProfile] = useState<ChildProfile | null>(
     null,
   );
+  const { t } = useLanguage();
 
   const loadProfiles = useCallback(async () => {
     const all = await repo.getAll();
@@ -77,12 +79,12 @@ export default function ProfilesScreen() {
   function handleDelete(id: string) {
     const profile = profiles.find((p) => p.id === id);
     Alert.alert(
-      "Delete Profile",
-      `Remove ${profile?.name ?? "this profile"}? This cannot be undone.`,
+      t.deleteProfile,
+      t.deleteProfileConfirm.replace("%name%", profile?.name ?? ""),
       [
-        { text: "Cancel", style: "cancel" },
+        { text: t.cancel, style: "cancel" },
         {
-          text: "Delete",
+          text: t.delete,
           style: "destructive",
           onPress: async () => {
             await repo.delete(id);
@@ -105,17 +107,14 @@ export default function ProfilesScreen() {
       >
         {/* Page header */}
         <View style={styles.pageHeader}>
-          <Text style={styles.overline}>Care Management</Text>
-          <Text style={styles.title}>Special Requirements</Text>
+          <Text style={styles.overline}>{t.careManagement}</Text>
+          <Text style={styles.title}>{t.specialRequirements}</Text>
         </View>
 
         {/* GDPR / RODO compliance banner */}
         <View style={styles.gdprBanner}>
           <Icon name="verified-user" size={22} color={Colors.primary} />
-          <Text style={styles.gdprText}>
-            This view is filtered for specialised care. Data is encrypted and
-            compliant with local educational privacy regulations (RODO).
-          </Text>
+          <Text style={styles.gdprText}>{t.gdprBanner}</Text>
         </View>
 
         {/* Add profile button */}
@@ -129,10 +128,10 @@ export default function ProfilesScreen() {
             setModalVisible(true);
           }}
           accessibilityRole="button"
-          accessibilityLabel="Add child profile"
+          accessibilityLabel={t.addChildProfile}
         >
           <Icon name="person-add" size={20} color={Colors.onPrimaryContainer} />
-          <Text style={styles.addBtnLabel}>Add Child Profile</Text>
+          <Text style={styles.addBtnLabel}>{t.addChildProfile}</Text>
         </Pressable>
 
         {/* Profile list */}

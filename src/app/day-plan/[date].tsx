@@ -56,6 +56,7 @@ import {
   Spacing,
   Typography,
 } from "@/constants/theme";
+import { useLanguage } from "@/contexts/language-context";
 import { ChildProfileRepository } from "@/db/child-profile-repository";
 import { DayPlanRepository } from "@/db/day-plan-repository";
 import { getGeminiApiKey } from "@/services/api-key-store";
@@ -70,21 +71,27 @@ type ViewState = "unplanned" | "generating" | "planned" | "error";
 // Helpers
 // ---------------------------------------------------------------------------
 
-function formatDate(dateStr: string): string {
+function formatDate(dateStr: string, locale: string): string {
   const d = new Date(dateStr + "T12:00:00"); // noon to avoid TZ day-shift
-  return d.toLocaleDateString("pl-PL", {
+  return d.toLocaleDateString(locale, {
     weekday: "long",
     day: "numeric",
     month: "long",
   });
 }
 
-function getCurrentSeason(): string {
+type SeasonKey =
+  | "seasonSpring"
+  | "seasonSummer"
+  | "seasonAutumn"
+  | "seasonWinter";
+
+function getCurrentSeasonKey(): SeasonKey {
   const month = new Date().getMonth() + 1;
-  if (month >= 3 && month <= 5) return "Wiosna";
-  if (month >= 6 && month <= 8) return "Lato";
-  if (month >= 9 && month <= 11) return "Jesień";
-  return "Zima";
+  if (month >= 3 && month <= 5) return "seasonSpring";
+  if (month >= 6 && month <= 8) return "seasonSummer";
+  if (month >= 9 && month <= 11) return "seasonAutumn";
+  return "seasonWinter";
 }
 
 function getUpcomingHoliday(): string | null {
@@ -127,7 +134,9 @@ a sequential anonymous key (Child_A, Child_B, …) and output:
 export default function DayPlanScreen() {
   const { date } = useLocalSearchParams<{ date: string }>();
   const dateStr = Array.isArray(date) ? date[0] : (date ?? "");
-  const formattedDate = dateStr ? formatDate(dateStr) : "";
+  const { t, language } = useLanguage();
+  const dateLocale = language === "en" ? "en-GB" : "pl-PL";
+  const formattedDate = dateStr ? formatDate(dateStr, dateLocale) : "";
 
   const db = useSQLiteContext();
   const profileRepo = useMemo(() => new ChildProfileRepository(db), [db]);
@@ -139,7 +148,8 @@ export default function DayPlanScreen() {
   const [plan, setPlan] = useState<LessonPlan | null>(null);
   const [profiles, setProfiles] = useState<ChildProfile[]>([]);
 
-  const season = getCurrentSeason();
+  const seasonKey = getCurrentSeasonKey();
+  const season = t[seasonKey];
   const holiday = getUpcomingHoliday();
 
   // Load active profiles on mount
@@ -200,9 +210,7 @@ export default function DayPlanScreen() {
       // Step 1: Get API key (bundled via EXPO_PUBLIC_GEMINI_API_KEY)
       const apiKey = await getGeminiApiKey();
       if (!apiKey) {
-        throw new Error(
-          "Klucz API nie jest skonfigurowany. Skontaktuj się z administratorem.",
-        );
+        throw new Error(t.apiKeyMissing);
       }
 
       // Step 2: Scrub PII on-device (LLM or rule-based fallback)
@@ -247,6 +255,7 @@ export default function DayPlanScreen() {
         season,
         tagSummary: anonymized.tagSummary,
         privacyMap: anonymized.privacyMap,
+        languageInstruction: t.aiLanguageInstruction,
       });
 
       // Step 4: Re-insert real names client-side
@@ -291,7 +300,7 @@ export default function DayPlanScreen() {
           </Pressable>
           <View style={styles.barText}>
             <Text style={styles.overline}>
-              {viewState === "planned" ? "Plan Dnia" : "Tworzenie Lekcji"}
+              {viewState === "planned" ? t.planHeader : t.createLesson}
             </Text>
             <Text style={styles.dateLabel}>{formattedDate}</Text>
           </View>
@@ -319,7 +328,7 @@ export default function DayPlanScreen() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.noplanHint}>Brak planu na ten dzień</Text>
+          <Text style={styles.noplanHint}>{t.noPlan}</Text>
 
           {/* LLM download progress */}
           {llm.downloadProgress > 0 && llm.downloadProgress < 1 && (
@@ -327,16 +336,16 @@ export default function DayPlanScreen() {
           )}
 
           <View style={styles.topicCard}>
-            <Text style={styles.topicLabel}>Temat Dnia</Text>
+            <Text style={styles.topicLabel}>{t.dayTopic}</Text>
             <TextInput
               style={styles.topicInput}
               value={topic}
               onChangeText={setTopic}
-              placeholder="Wpisz temat (opcjonalnie)"
+              placeholder={t.topicPlaceholder}
               placeholderTextColor={Colors.outlineVariant}
               multiline
               maxLength={120}
-              accessibilityLabel="Temat dnia"
+              accessibilityLabel={t.dayTopic}
             />
             <Text style={styles.charCount}>{topic.length}/120</Text>
 
@@ -347,9 +356,9 @@ export default function DayPlanScreen() {
               ]}
               onPress={handleGenerate}
               accessibilityRole="button"
-              accessibilityLabel="Generuj plan lekcji"
+              accessibilityLabel={t.generatePlan}
             >
-              <Text style={styles.generateBtnLabel}>Generuj Plan Lekcji</Text>
+              <Text style={styles.generateBtnLabel}>{t.generatePlan}</Text>
               <Icon name="auto-fix-high" size={20} color={Colors.onPrimary} />
             </Pressable>
           </View>
@@ -366,10 +375,7 @@ export default function DayPlanScreen() {
               size={20}
               color={Colors.tertiaryDim}
             />
-            <Text style={styles.tipText}>
-              Wskazówka: Podanie konkretnych materiałów klasowych pomaga AI
-              tworzyć bardziej trafne aktywności.
-            </Text>
+            <Text style={styles.tipText}>{t.tipBody}</Text>
           </View>
         </ScrollView>
       )}
@@ -383,10 +389,11 @@ export default function DayPlanScreen() {
 
 function LLMDownloadBanner({ progress }: { progress: number }) {
   const pct = Math.round(progress * 100);
+  const { t } = useLanguage();
   return (
     <View style={llmStyles.banner}>
       <Text style={llmStyles.label}>
-        Pobieranie modelu AI na urządzenie ({pct}%)…
+        {t.downloadingModel} ({pct}%)…
       </Text>
       <View style={llmStyles.track}>
         <View style={[llmStyles.fill, { width: `${pct}%` as `${number}%` }]} />
@@ -406,26 +413,24 @@ function ContextSummaryCard({
   holiday,
   activeProfileCount,
 }: ContextSummaryCardProps) {
+  const { t } = useLanguage();
   return (
     <View style={ctxStyles.card}>
       <View style={ctxStyles.headerRow}>
         <Icon name="info-outline" size={18} color={Colors.secondary} />
-        <Text style={ctxStyles.title}>Co weźmie pod uwagę AI</Text>
+        <Text style={ctxStyles.title}>{t.aiConsiders}</Text>
       </View>
       <View style={ctxStyles.chipRow}>
-        <ContextChip icon="wb-sunny" label={"Pora roku: " + season} />
+        <ContextChip icon="wb-sunny" label={t.season + ": " + season} />
         {holiday && (
-          <ContextChip
-            icon="celebration"
-            label={"Zbliżające się: " + holiday}
-          />
+          <ContextChip icon="celebration" label={t.upcoming + ": " + holiday} />
         )}
         <ContextChip
           icon="child-care"
           label={
             activeProfileCount > 0
-              ? `${activeProfileCount} aktywn${activeProfileCount === 1 ? "y" : "ych"} profil${activeProfileCount === 1 ? "" : "i"} specjalnych`
-              : "Brak profili specjalnych"
+              ? t.activeProfiles(activeProfileCount)
+              : t.noSpecialProfiles
           }
         />
       </View>
@@ -452,6 +457,7 @@ function PlannedView({
   onRegenerate: () => void;
 }) {
   const [showRegenModal, setShowRegenModal] = useState(false);
+  const { t } = useLanguage();
 
   const sortedActivities = useMemo(
     () =>
@@ -478,10 +484,10 @@ function PlannedView({
               ]}
               onPress={() => {}}
               accessibilityRole="button"
-              accessibilityLabel="Udostępnij plan"
+              accessibilityLabel={t.share}
             >
               <Icon name="share" size={16} color={Colors.secondary} />
-              <Text style={planHeaderStyles.actionBtnLabel}>Udostępnij</Text>
+              <Text style={planHeaderStyles.actionBtnLabel}>{t.share}</Text>
             </Pressable>
             <Pressable
               style={({ pressed }) => [
@@ -491,7 +497,7 @@ function PlannedView({
               ]}
               onPress={() => setShowRegenModal(true)}
               accessibilityRole="button"
-              accessibilityLabel="Generuj ponownie"
+              accessibilityLabel={t.regenerate}
             >
               <Icon name="refresh" size={16} color={Colors.onPrimary} />
               <Text
@@ -500,7 +506,7 @@ function PlannedView({
                   planHeaderStyles.regenBtnLabel,
                 ]}
               >
-                Generuj ponownie
+                {t.regenerate}
               </Text>
             </Pressable>
           </View>
@@ -539,20 +545,21 @@ function ErrorView({
   onRetry: () => void;
   onBack: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <View style={errStyles.root}>
       <Icon name="error-outline" size={48} color={Colors.error} />
-      <Text style={errStyles.title}>Błąd generowania</Text>
+      <Text style={errStyles.title}>{t.planError}</Text>
       <Text style={errStyles.message}>{message}</Text>
       <Pressable
         style={errStyles.retryBtn}
         onPress={onRetry}
         accessibilityRole="button"
       >
-        <Text style={errStyles.retryLabel}>Spróbuj ponownie</Text>
+        <Text style={errStyles.retryLabel}>{t.retry}</Text>
       </Pressable>
       <Pressable onPress={onBack} accessibilityRole="button">
-        <Text style={errStyles.backLink}>Wróć</Text>
+        <Text style={errStyles.backLink}>{t.back}</Text>
       </Pressable>
     </View>
   );
@@ -589,6 +596,7 @@ function SkeletonCard() {
 }
 
 function SkeletonView() {
+  const { t } = useLanguage();
   return (
     <ScrollView
       style={styles.scroll}
@@ -597,9 +605,7 @@ function SkeletonView() {
     >
       <View style={skeletonStyles.generatingRow}>
         <ActivityIndicator size="small" color={Colors.primary} />
-        <Text style={skeletonStyles.generatingText}>
-          AI tworzy plan lekcji…
-        </Text>
+        <Text style={skeletonStyles.generatingText}>{t.generatingPlan}</Text>
       </View>
       <SkeletonCard />
       <SkeletonCard />
@@ -693,6 +699,7 @@ function ActivityCard({
   activity: Activity;
   isLast: boolean;
 }) {
+  const { t } = useLanguage();
   const hasAdaptations =
     activity.specialNeedsAdaptations != null &&
     Object.keys(activity.specialNeedsAdaptations).length > 0;
@@ -730,7 +737,7 @@ function ActivityCard({
         {/* Pedagogical goals accordion */}
         {activity.pedagogicalGoals.length > 0 && (
           <AccordionSection
-            title="Cele pedagogiczne"
+            title={t.pedagogicalGoals}
             icon="school"
             iconColor={Colors.primary}
           >
@@ -748,7 +755,7 @@ function ActivityCard({
         {/* Curriculum points accordion */}
         {activity.curriculumPoints.length > 0 && (
           <AccordionSection
-            title="Podstawa programowa"
+            title={t.curriculumPoints}
             icon="menu-book"
             iconColor={Colors.secondary}
             accentBg={Colors.secondaryFixedDim}
@@ -772,7 +779,9 @@ function ActivityCard({
                 size={13}
                 color={Colors.onSurfaceVariant}
               />
-              <Text style={timelineStyles.adaptHeaderText}>Dostosowania</Text>
+              <Text style={timelineStyles.adaptHeaderText}>
+                {t.adaptations}
+              </Text>
             </View>
             {Object.entries(activity.specialNeedsAdaptations!).map(
               ([child, text]) => {
@@ -811,6 +820,7 @@ function RegenerateModal({
   onConfirm: () => void;
   onDismiss: () => void;
 }) {
+  const { t } = useLanguage();
   return (
     <Modal
       visible={visible}
@@ -823,11 +833,8 @@ function RegenerateModal({
         <View style={modalStyles.sheet}>
           <View style={modalStyles.handle} />
           <Icon name="refresh" size={32} color={Colors.primary} />
-          <Text style={modalStyles.title}>Wygenerować ponownie?</Text>
-          <Text style={modalStyles.body}>
-            Obecny plan zostanie zastąpiony nowym.{"\n"}Tej operacji nie można
-            cofnąć.
-          </Text>
+          <Text style={modalStyles.title}>{t.regenerateTitle}</Text>
+          <Text style={modalStyles.body}>{t.regenerateBody}</Text>
           <Pressable
             style={({ pressed }) => [
               modalStyles.confirmBtn,
@@ -836,7 +843,7 @@ function RegenerateModal({
             onPress={onConfirm}
             accessibilityRole="button"
           >
-            <Text style={modalStyles.confirmLabel}>Generuj ponownie</Text>
+            <Text style={modalStyles.confirmLabel}>{t.regenerate}</Text>
           </Pressable>
           <Pressable
             style={({ pressed }) => [
@@ -846,7 +853,7 @@ function RegenerateModal({
             onPress={onDismiss}
             accessibilityRole="button"
           >
-            <Text style={modalStyles.cancelLabel}>Anuluj</Text>
+            <Text style={modalStyles.cancelLabel}>{t.cancel}</Text>
           </Pressable>
         </View>
       </Pressable>
