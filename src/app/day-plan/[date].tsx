@@ -24,6 +24,7 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -311,7 +312,11 @@ export default function DayPlanScreen() {
         <PlannedView
           plan={plan}
           formattedDate={formattedDate}
-          onRegenerate={handleGenerate}
+          onDelete={async () => {
+            await planRepo.delete(dateStr);
+            setPlan(null);
+            setViewState("unplanned");
+          }}
         />
       ) : viewState === "generating" ? (
         <SkeletonView />
@@ -450,13 +455,12 @@ function ContextChip({ icon, label }: { icon: string; label: string }) {
 function PlannedView({
   plan,
   formattedDate,
-  onRegenerate,
+  onDelete,
 }: {
   plan: LessonPlan;
   formattedDate: string;
-  onRegenerate: () => void;
+  onDelete: () => void;
 }) {
-  const [showRegenModal, setShowRegenModal] = useState(false);
   const { t } = useLanguage();
 
   const sortedActivities = useMemo(
@@ -492,21 +496,26 @@ function PlannedView({
             <Pressable
               style={({ pressed }) => [
                 planHeaderStyles.actionBtn,
-                planHeaderStyles.regenBtn,
+                planHeaderStyles.deleteBtn,
                 pressed && { opacity: 0.85 },
               ]}
-              onPress={() => setShowRegenModal(true)}
+              onPress={() =>
+                Alert.alert(t.deletePlan, t.deletePlanConfirm, [
+                  { text: t.cancel, style: "cancel" },
+                  { text: t.delete, style: "destructive", onPress: onDelete },
+                ])
+              }
               accessibilityRole="button"
-              accessibilityLabel={t.regenerate}
+              accessibilityLabel={t.deletePlan}
             >
-              <Icon name="refresh" size={16} color={Colors.onPrimary} />
+              <Icon name="delete-outline" size={16} color={Colors.onError} />
               <Text
                 style={[
                   planHeaderStyles.actionBtnLabel,
-                  planHeaderStyles.regenBtnLabel,
+                  planHeaderStyles.deleteBtnLabel,
                 ]}
               >
-                {t.regenerate}
+                {t.deletePlan}
               </Text>
             </Pressable>
           </View>
@@ -524,14 +533,6 @@ function PlannedView({
         </View>
       </ScrollView>
 
-      <RegenerateModal
-        visible={showRegenModal}
-        onConfirm={() => {
-          setShowRegenModal(false);
-          onRegenerate();
-        }}
-        onDismiss={() => setShowRegenModal(false)}
-      />
     </>
   );
 }
@@ -1116,6 +1117,10 @@ const planHeaderStyles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderColor: Colors.primary,
   },
+  deleteBtn: {
+    backgroundColor: Colors.error,
+    borderColor: Colors.error,
+  },
   actionBtnLabel: {
     fontFamily: FontFamily.bodyMedium,
     fontSize: 13,
@@ -1124,6 +1129,9 @@ const planHeaderStyles = StyleSheet.create({
   },
   regenBtnLabel: {
     color: Colors.onPrimary,
+  },
+  deleteBtnLabel: {
+    color: Colors.onError,
   },
 });
 

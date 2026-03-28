@@ -64,6 +64,8 @@ export const en: Translations = {
   regenerate: "Regenerate",
   regenerateTitle: "Generate a new plan?",
   regenerateBody: "The current plan will be replaced. This cannot be undone.",
+  deletePlan: "Delete plan",
+  deletePlanConfirm: "Delete the plan for this day? This cannot be undone.",
   pedagogicalGoals: "Pedagogical Goals",
   curriculumPoints: "Core Curriculum",
   adaptations: "Adaptations",

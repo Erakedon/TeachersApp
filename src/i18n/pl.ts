@@ -63,6 +63,8 @@ export const pl = {
   regenerateTitle: "Wygenerować nowy plan?",
   regenerateBody:
     "Aktualny plan zostanie zastąpiony. Tej operacji nie można cofnąć.",
+  deletePlan: "Usuń plan",
+  deletePlanConfirm: "Usunąć plan na ten dzień? Tej operacji nie można cofnąć.",
   pedagogicalGoals: "Cele pedagogiczne",
   curriculumPoints: "Podstawa programowa",
   adaptations: "Dostosowania",

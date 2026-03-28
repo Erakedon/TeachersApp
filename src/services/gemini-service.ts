@@ -66,7 +66,7 @@ Rules:
 - Each activity must reference 1-3 curriculumPoints from the Polish podstawa programowa.
 - Only include specialNeedsAdaptations when the group has special needs tags.
 - specialNeedsAdaptations keys must exactly match the tags provided above.
-- All text must be in Polish.`;
+- ${langLine}`;
 }
 
 // ---------------------------------------------------------------------------

@@ -38,9 +38,8 @@ export default function TabsLayout() {
 
       <NativeTabs.Trigger name="settings">
         <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
-        {/* TODO Stage 11: replace with proper settings icon */}
         <NativeTabs.Trigger.Icon
-          src={require("@/assets/images/tabIcons/explore.png")}
+          src={require("@/assets/images/tabIcons/settings.png")}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
