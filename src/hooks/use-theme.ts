@@ -1,4 +1,8 @@
-import { Colors, ColorToken, Typography, TypographyVariant } from '@/constants/theme';
+import {
+    Colors,
+    ColorToken,
+    Typography
+} from "@/constants/theme";
 
 /**
  * Returns the app's design token objects.

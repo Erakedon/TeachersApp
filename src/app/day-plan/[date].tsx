@@ -1,10 +1,10 @@
-import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { router, useLocalSearchParams } from "expo-router";
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { Icon } from '@/components/icon';
-import { Colors, FontFamily, Spacing, Typography } from '@/constants/theme';
+import { Icon } from "@/components/icon";
+import { Colors, FontFamily, Spacing, Typography } from "@/constants/theme";
 
 /**
  * Day Plan screen — pushed on the root Stack when the teacher taps
@@ -18,23 +18,26 @@ export default function DayPlanScreen() {
   const { date } = useLocalSearchParams<{ date: string }>();
 
   const formattedDate = React.useMemo(() => {
-    if (!date) return '';
+    if (!date) return "";
     const d = new Date(date);
-    return d.toLocaleDateString('en-GB', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
+    return d.toLocaleDateString("en-GB", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     });
   }, [date]);
 
   return (
     <View style={styles.container}>
       {/* Header with back button */}
-      <SafeAreaView edges={['top']} style={styles.headerSafe}>
+      <SafeAreaView edges={["top"]} style={styles.headerSafe}>
         <View style={styles.header}>
           <Pressable
-            style={({ pressed }) => [styles.backButton, pressed && styles.backButtonPressed]}
+            style={({ pressed }) => [
+              styles.backButton,
+              pressed && styles.backButtonPressed,
+            ]}
             onPress={() => router.back()}
             accessibilityLabel="Go back to dashboard"
             accessibilityRole="button"
@@ -49,7 +52,7 @@ export default function DayPlanScreen() {
       </SafeAreaView>
 
       {/* Content area */}
-      <SafeAreaView style={styles.content} edges={['bottom', 'left', 'right']}>
+      <SafeAreaView style={styles.content} edges={["bottom", "left", "right"]}>
         <View style={styles.placeholder}>
           <Icon name="auto-fix-high" size={40} color={Colors.primary} />
           <Text style={styles.placeholderTitle}>No plan yet</Text>
@@ -68,18 +71,18 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surface,
   },
   headerSafe: {
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.outlineVariant,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
     shadowRadius: 6,
     elevation: 2,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: Spacing.four,
     paddingVertical: Spacing.three,
     gap: Spacing.three,
@@ -88,8 +91,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   backButtonPressed: {
     backgroundColor: Colors.surfaceContainerLow,
@@ -116,8 +119,8 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 16,
     backgroundColor: Colors.surfaceContainerLow,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     gap: Spacing.three,
     paddingHorizontal: Spacing.five,
   },
@@ -129,6 +132,6 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.body,
     fontSize: 14,
     color: Colors.onSurfaceVariant,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });

@@ -45,6 +45,7 @@ The four exported HTML designs in the `/designs` folder are the authoritative vi
 6. **Create a `useTheme()` hook** that returns the current theme's color and font tokens — this will be imported by all screen components.
 
 ### Deliverable
+
 A fully typed theme module that any component can import to get pixel-perfect design tokens matching the Gentle Guardian design system. No visual screens are built yet.
 
 ---
@@ -56,6 +57,7 @@ A fully typed theme module that any component can import to get pixel-perfect de
 ### Tasks
 
 1. **Restructure the Expo Router file tree** to reflect the three tabs visible in all four designs:
+
    ```
    src/app/
      _layout.tsx          ← root layout (fonts, splash, ThemeProvider)
@@ -90,6 +92,7 @@ A fully typed theme module that any component can import to get pixel-perfect de
 6. **Handle safe area insets** on all platforms (notch, home indicator, status bar).
 
 ### Deliverable
+
 A running app that navigates between three tab screens and the day-plan route, with the correct header and bottom bar on every screen, matching the design shell.
 
 ---
@@ -129,6 +132,7 @@ A running app that navigates between three tab screens and the day-plan route, w
    - Subtitle: "Organize your month and nurture curiosity with AI-guided lessons."
 
 ### Deliverable
+
 A fully interactive Dashboard screen with a working calendar and navigation to the day-plan route. Visually matches `dashboard.html`.
 
 ---
@@ -171,6 +175,7 @@ A fully interactive Dashboard screen with a working calendar and navigation to t
    - No DB connection yet — form validation only
 
 ### Deliverable
+
 Profiles screen fully rendered with static data arrays. Visually matches `profiles.html`. Tapping "Add Child Profile" opens the add form.
 
 ---
@@ -209,6 +214,7 @@ Profiles screen fully rendered with static data arrays. Visually matches `profil
 6. **Implement the generation flow stub:** tapping the button shows a `loading` state for 2 seconds then navigates to the Planned view (with mock data for now).
 
 ### Deliverable
+
 The unplanned day screen fully matches `dayPlanUnplanned.html`. Tapping Generate runs a mock flow and transitions to the next screen.
 
 ---
@@ -282,6 +288,7 @@ The unplanned day screen fully matches `dayPlanUnplanned.html`. Tapping Generate
 8. **Define TypeScript interfaces** for all entities in `src/types/`.
 
 ### Deliverable
+
 Full CRUD for child profiles persisted on-device. Calendar dots appear for dates that have saved plans. Pending tasks load from DB.
 
 ---
@@ -307,19 +314,21 @@ Full CRUD for child profiles persisted on-device. Calendar dots appear for dates
    - `scrubProfiles(profiles: ChildProfile[]): Promise<AnonymizedContext>` — takes active profiles, runs inference, returns anonymized tags
 
 4. **Design the scrubbing prompt template:**
+
    ```
    You are a privacy assistant. Given these child profiles, strip all names and
    generate anonymous tags. Output only JSON.
-   
+
    Input: [{"name": "Leo", "condition": "ASD"}, {"name": "Mia", "condition": "ALLERGY"}]
    Output: {"tags": ["[Child_A: ASD]", "[Child_B: ALLERGY]"], "mapping": {"Child_A": "Leo", "Child_B": "Mia"}}
    ```
 
 5. **Implement the `PrivacyMap` type:**
+
    ```typescript
    interface PrivacyMap {
-     tags: string[];           // e.g. ["[Child_A: ASD]"]
-     mapping: Record<string, string>;  // { "Child_A": "Leo" }
+     tags: string[]; // e.g. ["[Child_A: ASD]"]
+     mapping: Record<string, string>; // { "Child_A": "Leo" }
    }
    ```
 
@@ -330,6 +339,7 @@ Full CRUD for child profiles persisted on-device. Calendar dots appear for dates
 8. **Fallback strategy:** if ExecuTorch fails to load (unsupported device, insufficient RAM), fall back to a deterministic rule-based anonymizer (regex + incremental counter) so the app remains functional in all cases.
 
 ### Deliverable
+
 Active child profiles are anonymized on-device before any cloud call. The `PrivacyMap` is available in memory for post-processing. The model loads silently in the background.
 
 ---
@@ -351,16 +361,17 @@ Active child profiles are anonymized on-device before any cloud call. The `Priva
    - Timeout: 30 seconds; retry once on 5xx errors
 
 3. **Design the full generation prompt structure:**
+
    ```
    You are an expert Polish preschool pedagogical assistant. Generate a detailed,
    chronological lesson plan for [DATE] for a group of children aged 3-6.
-   
+
    Context:
    - Topic (optional): [TOPIC or "suggest a seasonal/holiday-appropriate topic"]
    - Season: [SEASON]
    - Special requirements in group: [ANONYMIZED_TAGS from ExecuTorch]
    - Polish Core Curriculum area: [randomly selected or topic-derived]
-   
+
    Output a JSON object with this structure:
    {
      "suggestedTopic": "...",
@@ -389,6 +400,7 @@ Active child profiles are anonymized on-device before any cloud call. The `Priva
    - Operates entirely client-side after the API response arrives
 
 6. **Wire the full pipeline in `GenerationOrchestrator`:**
+
    ```
    getActiveProfiles()
      → EdgeAIService.scrubProfiles()     ← Stage 7
@@ -403,6 +415,7 @@ Active child profiles are anonymized on-device before any cloud call. The `Priva
    - Used to enrich the prompt and validate returned curriculum point codes
 
 ### Deliverable
+
 End-to-end generation pipeline: tapping "Generate Lesson Plan" produces a real AI-generated, curriculum-aligned plan with anonymized profiles — and the result is saved to the local DB and displayed on-screen.
 
 ---
@@ -454,6 +467,7 @@ End-to-end generation pipeline: tapping "Generate Lesson Plan" produces a real A
    - Full implementation deferred to a later enhancement
 
 ### Deliverable
+
 A fully rendered, interactive day plan screen. Activity cards expand/collapse smoothly. All generated content (including child-specific adaptations with real names) is displayed correctly. Screen visually matches `dayPlanPlanned.html`.
 
 ---
@@ -495,6 +509,7 @@ A fully rendered, interactive day plan screen. Activity cards expand/collapse sm
    - "Open source licenses" link
 
 ### Deliverable
+
 A complete Settings screen. Language switching works end-to-end (UI in PL or EN). API key is securely stored and testable. All preference values are persisted.
 
 ---
@@ -538,6 +553,7 @@ A complete Settings screen. Language switching works end-to-end (UI in PL or EN)
 8. **Error boundaries** — wraps each tab screen; shows a friendly error card instead of crashing.
 
 ### Deliverable
+
 The app feels native, polished, and professional. Animations are smooth (60fps). All interactive elements are accessible to screen readers.
 
 ---
@@ -586,35 +602,36 @@ The app feels native, polished, and professional. Animations are smooth (60fps).
    - Offline mode: app works fully without network (SQLite, ExecuTorch); graceful error if Gemini unreachable
 
 ### Deliverable
+
 Test suite passing. Security audit clean. App is ready for TestFlight / internal Android distribution.
 
 ---
 
 ## Cross-Cutting Concerns (applies to all stages)
 
-| Concern | Approach |
-|---|---|
-| **GDPR / RODO** | No PII in cloud requests (enforced by Stage 7). SQLite file excluded from backups. Explicit consent copy on profiles screen. |
-| **TypeScript** | Strict mode. All entities fully typed. No `any`. |
-| **Error handling** | Every async operation wrapped in try/catch. User-facing error messages in both languages. |
-| **State management** | React Context for theme and language. Local component state for UI. Repository pattern for DB access. No external state library needed. |
-| **Code style** | Consistent file naming (`kebab-case`). Components in `src/components/`. Screens in `src/app/`. Types in `src/types/`. Services in `src/services/`. Data in `src/data/`. |
+| Concern              | Approach                                                                                                                                                                |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **GDPR / RODO**      | No PII in cloud requests (enforced by Stage 7). SQLite file excluded from backups. Explicit consent copy on profiles screen.                                            |
+| **TypeScript**       | Strict mode. All entities fully typed. No `any`.                                                                                                                        |
+| **Error handling**   | Every async operation wrapped in try/catch. User-facing error messages in both languages.                                                                               |
+| **State management** | React Context for theme and language. Local component state for UI. Repository pattern for DB access. No external state library needed.                                 |
+| **Code style**       | Consistent file naming (`kebab-case`). Components in `src/components/`. Screens in `src/app/`. Types in `src/types/`. Services in `src/services/`. Data in `src/data/`. |
 
 ---
 
 ## Stage Summary
 
-| # | Stage | Key Output |
-|---|---|---|
-| 1 | Design System & Foundation | Theme tokens, fonts, typography constants |
-| 2 | App Shell & Navigation | Tab bar, header, Expo Router file structure |
-| 3 | Dashboard Screen | Interactive calendar, tip card, pending tasks |
-| 4 | Profiles Screen UI | Child profile cards, GDPR banner, add form |
-| 5 | Day Plan — Unplanned View | Topic input, context card, generate CTA |
-| 6 | Local Data Layer | SQLite schema, repositories, DB wired to UI |
-| 7 | Edge AI — PII Scrubbing | ExecuTorch integration, anonymization pipeline |
-| 8 | Cloud AI — Plan Generation | Gemini API, prompt engineering, privacy remapping |
-| 9 | Day Plan — Planned View | Activity timeline cards, accordion sections |
-| 10 | Settings & i18n | Language toggle (EN/PL), API key config, preferences |
-| 11 | Polish & Accessibility | Animations, haptics, skeleton loaders, a11y |
-| 12 | Testing & Release Prep | Unit/integration tests, security audit, EAS build |
+| #   | Stage                      | Key Output                                           |
+| --- | -------------------------- | ---------------------------------------------------- |
+| 1   | Design System & Foundation | Theme tokens, fonts, typography constants            |
+| 2   | App Shell & Navigation     | Tab bar, header, Expo Router file structure          |
+| 3   | Dashboard Screen           | Interactive calendar, tip card, pending tasks        |
+| 4   | Profiles Screen UI         | Child profile cards, GDPR banner, add form           |
+| 5   | Day Plan — Unplanned View  | Topic input, context card, generate CTA              |
+| 6   | Local Data Layer           | SQLite schema, repositories, DB wired to UI          |
+| 7   | Edge AI — PII Scrubbing    | ExecuTorch integration, anonymization pipeline       |
+| 8   | Cloud AI — Plan Generation | Gemini API, prompt engineering, privacy remapping    |
+| 9   | Day Plan — Planned View    | Activity timeline cards, accordion sections          |
+| 10  | Settings & i18n            | Language toggle (EN/PL), API key config, preferences |
+| 11  | Polish & Accessibility     | Animations, haptics, skeleton loaders, a11y          |
+| 12  | Testing & Release Prep     | Unit/integration tests, security audit, EAS build    |

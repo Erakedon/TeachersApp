@@ -1,7 +1,11 @@
-import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
+import { Platform, StyleSheet, Text, type TextProps } from "react-native";
 
-import { ColorToken, FontFamily, Typography, TypographyVariant } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import {
+    ColorToken,
+    FontFamily,
+    TypographyVariant
+} from "@/constants/theme";
+import { useTheme } from "@/hooks/use-theme";
 
 export type ThemedTextProps = TextProps & {
   /** Typography scale variant — maps to a Typography preset from theme.ts */
@@ -12,10 +16,24 @@ export type ThemedTextProps = TextProps & {
    * Legacy type prop kept for backward compatibility with existing screens.
    * Prefer `variant` for new code.
    */
-  type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code';
+  type?:
+    | "default"
+    | "title"
+    | "small"
+    | "smallBold"
+    | "subtitle"
+    | "link"
+    | "linkPrimary"
+    | "code";
 };
 
-export function ThemedText({ style, variant, color, type, ...rest }: ThemedTextProps) {
+export function ThemedText({
+  style,
+  variant,
+  color,
+  type,
+  ...rest
+}: ThemedTextProps) {
   const { colors, typography } = useTheme();
 
   return (
@@ -25,14 +43,14 @@ export function ThemedText({ style, variant, color, type, ...rest }: ThemedTextP
         { color: color ? colors[color] : colors.onSurface },
         variant && typography[variant],
         // Legacy type mappings
-        type === 'default' && styles.legacyDefault,
-        type === 'title' && styles.legacyTitle,
-        type === 'small' && styles.legacySmall,
-        type === 'smallBold' && styles.legacySmallBold,
-        type === 'subtitle' && styles.legacySubtitle,
-        type === 'link' && styles.legacyLink,
-        type === 'linkPrimary' && styles.legacyLinkPrimary,
-        type === 'code' && styles.legacyCode,
+        type === "default" && styles.legacyDefault,
+        type === "title" && styles.legacyTitle,
+        type === "small" && styles.legacySmall,
+        type === "smallBold" && styles.legacySmallBold,
+        type === "subtitle" && styles.legacySubtitle,
+        type === "link" && styles.legacyLink,
+        type === "linkPrimary" && styles.legacyLinkPrimary,
+        type === "code" && styles.legacyCode,
         style,
       ]}
       {...rest}
@@ -81,11 +99,11 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.body,
     fontSize: 14,
     lineHeight: 30,
-    color: '#3c87f7',
+    color: "#3c87f7",
   },
   legacyCode: {
     fontFamily: FontFamily.mono,
-    fontWeight: Platform.select({ android: '700' }) ?? '500',
+    fontWeight: Platform.select({ android: "700" }) ?? "500",
     fontSize: 12,
   },
 });

@@ -1,7 +1,9 @@
-import { MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
+import { MaterialIcons } from "@expo/vector-icons";
+import React from "react";
 
-export type MaterialIconName = React.ComponentProps<typeof MaterialIcons>['name'];
+export type MaterialIconName = React.ComponentProps<
+  typeof MaterialIcons
+>["name"];
 
 type IconProps = {
   name: MaterialIconName;

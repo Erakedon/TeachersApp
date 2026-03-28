@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect } from "expo-router";
 
 /**
  * explore.tsx is superseded by the (tabs)/profiles and (tabs)/settings routes.

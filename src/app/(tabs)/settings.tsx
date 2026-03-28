@@ -1,9 +1,9 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AppHeader } from '@/components/app-header';
-import { Colors, FontFamily, Spacing, Typography } from '@/constants/theme';
+import { AppHeader } from "@/components/app-header";
+import { Colors, FontFamily, Spacing, Typography } from "@/constants/theme";
 
 /**
  * Settings tab — placeholder screen for Stage 2.
@@ -14,10 +14,12 @@ export default function SettingsScreen() {
   return (
     <View style={styles.container}>
       <AppHeader />
-      <SafeAreaView style={styles.content} edges={['bottom', 'left', 'right']}>
+      <SafeAreaView style={styles.content} edges={["bottom", "left", "right"]}>
         <Text style={styles.title}>Settings</Text>
         <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>Language, API key, preferences — Stage 10</Text>
+          <Text style={styles.placeholderText}>
+            Language, API key, preferences — Stage 10
+          </Text>
         </View>
       </SafeAreaView>
     </View>
@@ -44,8 +46,8 @@ const styles = StyleSheet.create({
     marginTop: Spacing.four,
     borderRadius: 16,
     backgroundColor: Colors.surfaceContainerLow,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   placeholderText: {
     fontFamily: FontFamily.bodyMedium,

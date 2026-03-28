@@ -1,6 +1,6 @@
-import '@/global.css';
+import "@/global.css";
 
-import { Platform, TextStyle } from 'react-native';
+import { Platform, TextStyle } from "react-native";
 
 // ---------------------------------------------------------------------------
 // Color palette — extracted from the Gentle Guardian HTML designs (light only)
@@ -9,79 +9,79 @@ import { Platform, TextStyle } from 'react-native';
 
 export const Colors = {
   // Surfaces
-  surface: '#f9f9f9',
-  surfaceBright: '#f9f9f9',
-  surfaceDim: '#d7dbdb',
-  surfaceVariant: '#e0e3e4',
-  surfaceContainerLowest: '#ffffff',
-  surfaceContainerLow: '#f3f4f4',
-  surfaceContainer: '#eceeee',
-  surfaceContainerHigh: '#e6e9e9',
-  surfaceContainerHighest: '#e0e3e4',
+  surface: "#f9f9f9",
+  surfaceBright: "#f9f9f9",
+  surfaceDim: "#d7dbdb",
+  surfaceVariant: "#e0e3e4",
+  surfaceContainerLowest: "#ffffff",
+  surfaceContainerLow: "#f3f4f4",
+  surfaceContainer: "#eceeee",
+  surfaceContainerHigh: "#e6e9e9",
+  surfaceContainerHighest: "#e0e3e4",
 
   // Primary (forest green)
-  primary: '#2d6957',
-  primaryDim: '#1f5d4b',
-  primaryFixed: '#b1efd8',
-  primaryFixedDim: '#a3e1ca',
-  primaryContainer: '#b1efd8',
-  inversePrimary: '#bffee6',
+  primary: "#2d6957",
+  primaryDim: "#1f5d4b",
+  primaryFixed: "#b1efd8",
+  primaryFixedDim: "#a3e1ca",
+  primaryContainer: "#b1efd8",
+  inversePrimary: "#bffee6",
 
   // On-primary
-  onPrimary: '#e4fff3',
-  onPrimaryFixed: '#004938',
-  onPrimaryFixedVariant: '#296654',
-  onPrimaryContainer: '#1d5c4a',
+  onPrimary: "#e4fff3",
+  onPrimaryFixed: "#004938",
+  onPrimaryFixedVariant: "#296654",
+  onPrimaryContainer: "#1d5c4a",
 
   // Secondary (muted blue-grey)
-  secondary: '#4c6175',
-  secondaryDim: '#405568',
-  secondaryFixed: '#cee5fc',
-  secondaryFixedDim: '#c0d7ee',
-  secondaryContainer: '#cee5fc',
+  secondary: "#4c6175",
+  secondaryDim: "#405568",
+  secondaryFixed: "#cee5fc",
+  secondaryFixedDim: "#c0d7ee",
+  secondaryContainer: "#cee5fc",
 
   // On-secondary
-  onSecondary: '#f6f9ff',
-  onSecondaryFixed: '#2c4254',
-  onSecondaryFixedVariant: '#485e71',
-  onSecondaryContainer: '#3e5467',
+  onSecondary: "#f6f9ff",
+  onSecondaryFixed: "#2c4254",
+  onSecondaryFixedVariant: "#485e71",
+  onSecondaryContainer: "#3e5467",
 
   // Tertiary (warm grey)
-  tertiary: '#5f5f5c',
-  tertiaryDim: '#535350',
-  tertiaryFixed: '#ffffff',
-  tertiaryFixedDim: '#f2f1ec',
-  tertiaryContainer: '#ffffff',
+  tertiary: "#5f5f5c",
+  tertiaryDim: "#535350",
+  tertiaryFixed: "#ffffff",
+  tertiaryFixedDim: "#f2f1ec",
+  tertiaryContainer: "#ffffff",
 
   // On-tertiary
-  onTertiary: '#fbf9f4',
-  onTertiaryFixed: '#50504d',
-  onTertiaryFixedVariant: '#6d6d69',
-  onTertiaryContainer: '#62625f',
+  onTertiary: "#fbf9f4",
+  onTertiaryFixed: "#50504d",
+  onTertiaryFixedVariant: "#6d6d69",
+  onTertiaryContainer: "#62625f",
 
   // Error
-  error: '#a83836',
-  errorDim: '#67040d',
-  errorContainer: '#fa746f',
-  onError: '#fff7f6',
-  onErrorContainer: '#6e0a12',
+  error: "#a83836",
+  errorDim: "#67040d",
+  errorContainer: "#fa746f",
+  onError: "#fff7f6",
+  onErrorContainer: "#6e0a12",
 
   // Background & on-background
-  background: '#f9f9f9',
-  onBackground: '#2f3334',
+  background: "#f9f9f9",
+  onBackground: "#2f3334",
 
   // On-surface
-  onSurface: '#2f3334',
-  onSurfaceVariant: '#5b6061',
-  inverseSurface: '#0c0f0f',
-  inverseOnSurface: '#9c9d9d',
+  onSurface: "#2f3334",
+  onSurfaceVariant: "#5b6061",
+  inverseSurface: "#0c0f0f",
+  inverseOnSurface: "#9c9d9d",
 
   // Outline
-  outline: '#777b7c',
-  outlineVariant: '#afb3b3',
+  outline: "#777b7c",
+  outlineVariant: "#afb3b3",
 
   // Misc tints
-  surfaceTint: '#2d6957',
+  surfaceTint: "#2d6957",
 } as const;
 
 export type ColorToken = keyof typeof Colors;
@@ -92,13 +92,18 @@ export type ColorToken = keyof typeof Colors;
 // ---------------------------------------------------------------------------
 
 export const FontFamily = {
-  headline: 'PlusJakartaSans_700Bold',
-  headlineMedium: 'PlusJakartaSans_600SemiBold',
-  headlineLight: 'PlusJakartaSans_400Regular',
-  body: 'Inter_400Regular',
-  bodyMedium: 'Inter_500Medium',
-  bodySemiBold: 'Inter_600SemiBold',
-  mono: Platform.select({ ios: 'Courier New', android: 'monospace', web: 'monospace' }) ?? 'monospace',
+  headline: "PlusJakartaSans_700Bold",
+  headlineMedium: "PlusJakartaSans_600SemiBold",
+  headlineLight: "PlusJakartaSans_400Regular",
+  body: "Inter_400Regular",
+  bodyMedium: "Inter_500Medium",
+  bodySemiBold: "Inter_600SemiBold",
+  mono:
+    Platform.select({
+      ios: "Courier New",
+      android: "monospace",
+      web: "monospace",
+    }) ?? "monospace",
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -109,7 +114,7 @@ export const Radius = {
   none: 0,
   xs: 4,
   sm: 8,
-  md: 16,   // DEFAULT in the design system
+  md: 16, // DEFAULT in the design system
   lg: 32,
   xl: 48,
   full: 9999,
@@ -216,7 +221,7 @@ export const Typography = {
     fontSize: 10,
     lineHeight: 14,
     letterSpacing: 1.5,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
   } as TextStyle,
 } as const;
 

@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { Redirect } from "expo-router";
 
 /**
  * Root index — redirects to the Dashboard (tabs group is transparent,

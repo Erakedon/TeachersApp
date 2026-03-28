@@ -1,24 +1,24 @@
 import {
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  useFonts as useInterFonts,
-} from '@expo-google-fonts/inter';
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    useFonts as useInterFonts,
+} from "@expo-google-fonts/inter";
 import {
-  PlusJakartaSans_400Regular,
-  PlusJakartaSans_600SemiBold,
-  PlusJakartaSans_700Bold,
-  PlusJakartaSans_800ExtraBold,
-  useFonts as usePlusJakartaSansFonts,
-} from '@expo-google-fonts/plus-jakarta-sans';
-import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import * as SplashScreen from 'expo-splash-screen';
-import { Stack } from 'expo-router';
-import React, { useEffect } from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_600SemiBold,
+    PlusJakartaSans_700Bold,
+    PlusJakartaSans_800ExtraBold,
+    useFonts as usePlusJakartaSansFonts,
+} from "@expo-google-fonts/plus-jakarta-sans";
+import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import React, { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import { Colors } from '@/constants/theme';
+import { AnimatedSplashOverlay } from "@/components/animated-icon";
+import { Colors } from "@/constants/theme";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -74,7 +74,7 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen
             name="day-plan/[date]"
-            options={{ animation: 'slide_from_right' }}
+            options={{ animation: "slide_from_right" }}
           />
         </Stack>
         {/* Splash overlay renders on top of everything while fonts load */}

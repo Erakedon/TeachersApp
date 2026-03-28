@@ -1,9 +1,9 @@
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Icon } from '@/components/icon';
-import { Colors, FontFamily, Spacing } from '@/constants/theme';
+import { Icon } from "@/components/icon";
+import { Colors, FontFamily, Spacing } from "@/constants/theme";
 
 type AppHeaderProps = {
   onMenuPress?: () => void;
@@ -27,7 +27,10 @@ export function AppHeader({ onMenuPress }: AppHeaderProps) {
         {/* Left group: hamburger + app name */}
         <View style={styles.leftGroup}>
           <Pressable
-            style={({ pressed }) => [styles.iconButton, pressed && styles.iconButtonPressed]}
+            style={({ pressed }) => [
+              styles.iconButton,
+              pressed && styles.iconButtonPressed,
+            ]}
             onPress={onMenuPress}
             accessibilityLabel="Open menu"
             accessibilityRole="button"
@@ -48,10 +51,10 @@ export function AppHeader({ onMenuPress }: AppHeaderProps) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    backgroundColor: "rgba(255, 255, 255, 0.92)",
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.outlineVariant,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
     shadowRadius: 6,
@@ -59,23 +62,23 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   inner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: Spacing.four,
     paddingVertical: Spacing.three,
   },
   leftGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: Spacing.three,
   },
   iconButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   iconButtonPressed: {
     backgroundColor: Colors.primaryFixed,
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FontFamily.headline,
     fontSize: 20,
-    color: '#1b3d31', // emerald-900 from the HTML design
+    color: "#1b3d31", // emerald-900 from the HTML design
     letterSpacing: -0.3,
   },
   avatarContainer: {
@@ -93,8 +96,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryFixed,
     borderWidth: 2,
     borderColor: Colors.primaryFixed,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
 });

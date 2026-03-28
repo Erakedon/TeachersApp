@@ -1,7 +1,7 @@
-import { NativeTabs } from 'expo-router/unstable-native-tabs';
-import React from 'react';
+import { NativeTabs } from "expo-router/unstable-native-tabs";
+import React from "react";
 
-import { Colors } from '@/constants/theme';
+import { Colors } from "@/constants/theme";
 
 /**
  * Native tab bar layout for iOS & Android.
@@ -17,11 +17,12 @@ export default function TabsLayout() {
     <NativeTabs
       backgroundColor={Colors.surfaceContainerLowest}
       indicatorColor={Colors.primaryContainer}
-      labelStyle={{ selected: { color: Colors.primary } }}>
+      labelStyle={{ selected: { color: Colors.primary } }}
+    >
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Label>Dashboard</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/home.png')}
+          src={require("@/assets/images/tabIcons/home.png")}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
@@ -30,7 +31,7 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>Profiles</NativeTabs.Trigger.Label>
         {/* TODO Stage 11: replace with proper profiles icon */}
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
+          src={require("@/assets/images/tabIcons/explore.png")}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
@@ -39,7 +40,7 @@ export default function TabsLayout() {
         <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
         {/* TODO Stage 11: replace with proper settings icon */}
         <NativeTabs.Trigger.Icon
-          src={require('@/assets/images/tabIcons/explore.png')}
+          src={require("@/assets/images/tabIcons/explore.png")}
           renderingMode="template"
         />
       </NativeTabs.Trigger>
