@@ -13,14 +13,31 @@ import {
 } from "@expo-google-fonts/plus-jakarta-sans";
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
+import { SQLiteProvider, type SQLiteDatabase } from "expo-sqlite";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from 'react';
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AnimatedSplashOverlay } from "@/components/animated-icon";
+import { ModelDownloadBanner } from "@/components/model-download-banner";
 import { Colors } from "@/constants/theme";
+import { EdgeAIProvider } from "@/contexts/edge-ai-context";
+import { runMigrations, seedInitialData } from "@/db/migrations";
+
+// Module-level stable function — never recreated, so SQLiteProvider
+// does not see a new onInit prop on every render of RootLayout.
+async function initDB(db: SQLiteDatabase) {
+  await runMigrations(db);
+  await seedInitialData(db);
+}
 
 SplashScreen.preventAutoHideAsync();
+
+// Module-level constants so withLayoutContext never sees changed object
+// references across re-renders, which would synchronously update the
+// parent navigator state and cause an infinite render loop.
+const STACK_SCREEN_OPTIONS = { headerShown: false } as const;
+const DAY_PLAN_SCREEN_OPTIONS = { animation: 'slide_from_right' } as const;
 
 const appTheme = {
   ...DefaultTheme,
@@ -62,24 +79,36 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider value={appTheme}>
-        {/*
-         * Root Stack — owns the navigation hierarchy:
-         *   (tabs)           → the three-tab area (Dashboard / Profiles / Settings)
-         *   day-plan/[date]  → full-screen day plan, pushed on top of the tabs
-         *
-         * headerShown: false on all screens because each screen renders its
-         * own AppHeader or back-navigation chrome.
-         */}
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen
-            name="day-plan/[date]"
-            options={{ animation: "slide_from_right" }}
-          />
-        </Stack>
-        {/* Splash overlay renders on top of everything while fonts load */}
+        <EdgeAIProvider>
+          {/*
+           * useSuspense avoids the setLoading(true→false) state toggle
+           * that the non-suspense SQLiteProvider uses. The React.use()
+           * call inside resolves synchronously once the DB promise is
+           * settled, so the Stack only ever mounts ONCE — eliminating
+           * the mount/unmount oscillation that drove the render loop.
+           */}
+          <Suspense fallback={null}>
+            <SQLiteProvider
+              databaseName="gentle_guardian.db"
+              onInit={initDB}
+              useSuspense
+            >
+              <Stack screenOptions={STACK_SCREEN_OPTIONS}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen
+                  name="day-plan/[date]"
+                  options={DAY_PLAN_SCREEN_OPTIONS}
+                />
+              </Stack>
+            </SQLiteProvider>
+          </Suspense>
+          {/* Download progress bar — stubbed until Stage 8 wires useLLM */}
+          <ModelDownloadBanner />
+        </EdgeAIProvider>
+        {/* Animated splash lives outside Suspense so it's always visible */}
         <AnimatedSplashOverlay />
       </ThemeProvider>
     </SafeAreaProvider>
   );
 }
+

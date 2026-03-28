@@ -1,4 +1,5 @@
-﻿import React from "react";
+﻿import { useSQLiteContext } from "expo-sqlite";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -19,26 +20,37 @@ import {
     Spacing,
     Typography,
 } from "@/constants/theme";
-
-// ---------------------------------------------------------------------------
-// Mock plan dates — replaced by SQLite queries in Stage 6
-// ---------------------------------------------------------------------------
-const MOCK_PLAN_DATES = new Set([
-  "2026-03-10",
-  "2026-03-15",
-  "2026-03-18",
-  "2026-03-24",
-  "2026-03-28",
-]);
+import { DayPlanRepository } from "@/db/day-plan-repository";
+import { PendingTaskRepository } from "@/db/pending-task-repository";
+import { type PendingTask } from "@/types";
 
 // ---------------------------------------------------------------------------
 // Screen
 // ---------------------------------------------------------------------------
 
 export default function DashboardScreen() {
+  const db = useSQLiteContext();
+  const planRepo = useMemo(() => new DayPlanRepository(db), [db]);
+  const taskRepo = useMemo(() => new PendingTaskRepository(db), [db]);
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const isWide = width >= 600;
+
+  const [planDates, setPlanDates] = useState(new Set<string>());
+  const [tasks, setTasks] = useState<PendingTask[]>([]);
+
+  const loadData = useCallback(async () => {
+    const [dates, incomplete] = await Promise.all([
+      planRepo.getAllDates(),
+      taskRepo.getIncomplete(),
+    ]);
+    setPlanDates(new Set(dates));
+    setTasks(incomplete);
+  }, [planRepo, taskRepo]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   return (
     <View style={styles.root}>
@@ -64,12 +76,12 @@ export default function DashboardScreen() {
           <View
             style={[styles.calendarPane, isWide && styles.calendarPaneWide]}
           >
-            <MonthCalendar markedDates={MOCK_PLAN_DATES} />
+            <MonthCalendar markedDates={planDates} />
           </View>
 
           <View style={[styles.sidebar, isWide && styles.sidebarWide]}>
             <AssistantTipCard />
-            <PendingTasksPanel />
+            <PendingTasksPanel tasks={tasks} />
           </View>
         </View>
       </ScrollView>
@@ -100,18 +112,21 @@ function AssistantTipCard() {
 // Pending tasks panel
 // ---------------------------------------------------------------------------
 
-function PendingTasksPanel() {
+function PendingTasksPanel({ tasks }: { tasks: PendingTask[] }) {
   return (
     <View style={tasksStyles.card}>
       <Text style={tasksStyles.heading}>Pending Tasks</Text>
-      <TaskRow
-        dotColor={Colors.error}
-        text="Finalize sensory play materials for Thursday"
-      />
-      <TaskRow
-        dotColor={Colors.secondary}
-        text="Log afternoon snacks for Blue Group"
-      />
+      {tasks.length === 0 ? (
+        <Text style={tasksStyles.emptyText}>No pending tasks – all clear!</Text>
+      ) : (
+        tasks.map((t) => (
+          <TaskRow
+            key={t.id}
+            dotColor={t.priority === "urgent" ? Colors.error : Colors.secondary}
+            text={t.description}
+          />
+        ))
+      )}
     </View>
   );
 }
@@ -231,5 +246,11 @@ const tasksStyles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
     color: Colors.onSurface,
+  },
+  emptyText: {
+    fontFamily: FontFamily.body,
+    fontSize: 14,
+    lineHeight: 20,
+    color: Colors.onSurfaceVariant,
   },
 });

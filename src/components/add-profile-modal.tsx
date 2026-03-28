@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+    KeyboardAvoidingView,
+    Modal,
+    Platform,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ChildProfile, ConditionType } from '@/components/child-profile-card';
-import { Icon } from '@/components/icon';
-import { Colors, FontFamily, Radius, Spacing } from '@/constants/theme';
+import { type ConditionType } from "@/types";
+import { Icon } from "@/components/icon";
+import { Colors, FontFamily, Radius, Spacing } from "@/constants/theme";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -23,29 +23,38 @@ import { Colors, FontFamily, Radius, Spacing } from '@/constants/theme';
 interface AddProfileModalProps {
   visible: boolean;
   onClose: () => void;
-  onSave: (profile: Omit<ChildProfile, 'id'>) => void;
+  onSave: (draft: { name: string; age?: number; condition: ConditionType; notes?: string }) => void;
 }
 
-const CONDITIONS: ConditionType[] = ['ASD', 'Severe Allergy', 'ADHD', 'Physical'];
+const CONDITIONS: ConditionType[] = [
+  "ASD",
+  "Severe Allergy",
+  "ADHD",
+  "Physical",
+];
 
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
 
-export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalProps) {
+export function AddProfileModal({
+  visible,
+  onClose,
+  onSave,
+}: AddProfileModalProps) {
   const insets = useSafeAreaInsets();
-  const [name, setName] = useState('');
-  const [age, setAge] = useState('');
-  const [condition, setCondition] = useState<ConditionType>('ASD');
-  const [notes, setNotes] = useState('');
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [condition, setCondition] = useState<ConditionType>("ASD");
+  const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState<{ name?: string; age?: string }>({});
 
   function validate(): boolean {
     const next: typeof errors = {};
-    if (!name.trim()) next.name = 'Name is required.';
+    if (!name.trim()) next.name = "Name is required.";
     const ageNum = Number(age);
     if (!age.trim() || isNaN(ageNum) || ageNum < 1 || ageNum > 12) {
-      next.age = 'Enter a valid age (1–12).';
+      next.age = "Enter a valid age (1–12).";
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -53,15 +62,20 @@ export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalPro
 
   function handleSave() {
     if (!validate()) return;
-    onSave({ name: name.trim(), condition, active: true });
+    onSave({
+      name: name.trim(),
+      age: age ? Number(age) : undefined,
+      condition,
+      notes: notes.trim() || undefined,
+    });
     handleClose();
   }
 
   function handleClose() {
-    setName('');
-    setAge('');
-    setCondition('ASD');
-    setNotes('');
+    setName("");
+    setAge("");
+    setCondition("ASD");
+    setNotes("");
     setErrors({});
     onClose();
   }
@@ -75,9 +89,14 @@ export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalPro
     >
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View style={[styles.sheet, { paddingBottom: insets.bottom + Spacing.four }]}>
+        <View
+          style={[
+            styles.sheet,
+            { paddingBottom: insets.bottom + Spacing.four },
+          ]}
+        >
           {/* Drag handle */}
           <View style={styles.handle} />
 
@@ -88,7 +107,10 @@ export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalPro
               onPress={handleClose}
               hitSlop={12}
               accessibilityLabel="Close"
-              style={({ pressed }) => [styles.closeBtn, pressed && styles.closeBtnPressed]}
+              style={({ pressed }) => [
+                styles.closeBtn,
+                pressed && styles.closeBtnPressed,
+              ]}
             >
               <Icon name="close" size={22} color={Colors.onSurfaceVariant} />
             </Pressable>
@@ -106,14 +128,19 @@ export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalPro
               <TextInput
                 style={[styles.input, errors.name && styles.inputError]}
                 value={name}
-                onChangeText={(t) => { setName(t); setErrors((e) => ({ ...e, name: undefined })); }}
+                onChangeText={(t) => {
+                  setName(t);
+                  setErrors((e) => ({ ...e, name: undefined }));
+                }}
                 placeholder="e.g. Leo Anderson"
                 placeholderTextColor={Colors.outlineVariant}
                 autoCapitalize="words"
                 returnKeyType="next"
                 accessibilityLabel="Child name"
               />
-              {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+              {errors.name && (
+                <Text style={styles.errorText}>{errors.name}</Text>
+              )}
             </View>
 
             {/* Age */}
@@ -122,7 +149,10 @@ export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalPro
               <TextInput
                 style={[styles.input, errors.age && styles.inputError]}
                 value={age}
-                onChangeText={(t) => { setAge(t); setErrors((e) => ({ ...e, age: undefined })); }}
+                onChangeText={(t) => {
+                  setAge(t);
+                  setErrors((e) => ({ ...e, age: undefined }));
+                }}
                 placeholder="e.g. 5"
                 placeholderTextColor={Colors.outlineVariant}
                 keyboardType="number-pad"
@@ -140,7 +170,10 @@ export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalPro
                 {CONDITIONS.map((c) => (
                   <Pressable
                     key={c}
-                    style={[styles.conditionChip, condition === c && styles.conditionChipSelected]}
+                    style={[
+                      styles.conditionChip,
+                      condition === c && styles.conditionChipSelected,
+                    ]}
                     onPress={() => setCondition(c)}
                     accessibilityRole="radio"
                     accessibilityState={{ checked: condition === c }}
@@ -178,14 +211,20 @@ export function AddProfileModal({ visible, onClose, onSave }: AddProfileModalPro
           {/* Action buttons */}
           <View style={styles.actions}>
             <Pressable
-              style={({ pressed }) => [styles.btnCancel, pressed && styles.btnPressed]}
+              style={({ pressed }) => [
+                styles.btnCancel,
+                pressed && styles.btnPressed,
+              ]}
               onPress={handleClose}
               accessibilityRole="button"
             >
               <Text style={styles.btnCancelLabel}>Cancel</Text>
             </Pressable>
             <Pressable
-              style={({ pressed }) => [styles.btnSave, pressed && styles.btnPressed]}
+              style={({ pressed }) => [
+                styles.btnSave,
+                pressed && styles.btnPressed,
+              ]}
               onPress={handleSave}
               accessibilityRole="button"
             >
@@ -216,13 +255,13 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: Radius.full,
     backgroundColor: Colors.outlineVariant,
-    alignSelf: 'center',
+    alignSelf: "center",
     marginBottom: Spacing.three,
   },
   sheetHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: Spacing.four,
     marginBottom: Spacing.three,
   },
@@ -236,8 +275,8 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: Radius.full,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   closeBtnPressed: {
     backgroundColor: Colors.surfaceContainerLow,
@@ -282,8 +321,8 @@ const styles = StyleSheet.create({
     color: Colors.error,
   },
   conditionRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.two,
   },
   conditionChip: {
@@ -309,7 +348,7 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bodySemiBold,
   },
   actions: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: Spacing.two,
     paddingHorizontal: Spacing.four,
     paddingTop: Spacing.three,
@@ -320,8 +359,8 @@ const styles = StyleSheet.create({
     borderRadius: Radius.sm,
     borderWidth: 1.5,
     borderColor: Colors.outlineVariant,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   btnCancelLabel: {
     fontFamily: FontFamily.bodySemiBold,
@@ -334,8 +373,8 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.two + 2,
     borderRadius: Radius.sm,
     backgroundColor: Colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   btnSaveLabel: {
     fontFamily: FontFamily.bodySemiBold,

@@ -1,13 +1,13 @@
-﻿import React, { useState } from "react";
+﻿import { useSQLiteContext } from "expo-sqlite";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { AddProfileModal } from "@/components/add-profile-modal";
-import {
-  ChildProfile,
-  ChildProfileCard,
-} from "@/components/child-profile-card";
+import { ChildProfileCard } from "@/components/child-profile-card";
 import { Icon } from "@/components/icon";
+import { ChildProfileRepository } from "@/db/child-profile-repository";
+import { type ChildProfile, type ConditionType } from "@/types";
 import {
   BottomTabInset,
   Colors,
@@ -18,37 +18,37 @@ import {
 } from "@/constants/theme";
 
 // ---------------------------------------------------------------------------
-// Seed data — replaced by SQLite in Stage 6
-// ---------------------------------------------------------------------------
-
-const SEED_PROFILES: ChildProfile[] = [
-  { id: "1", name: "Leo Anderson", condition: "ASD", active: true },
-  { id: "2", name: "Mia Thompson", condition: "Severe Allergy", active: true },
-  { id: "3", name: "Noah Garcia", condition: "ADHD", active: false },
-  { id: "4", name: "Elena Rossi", condition: "Physical", active: true },
-];
-
-// ---------------------------------------------------------------------------
 // Screen
 // ---------------------------------------------------------------------------
 
 export default function ProfilesScreen() {
+  const db = useSQLiteContext();
+  const repo = useMemo(() => new ChildProfileRepository(db), [db]);
   const insets = useSafeAreaInsets();
-  const [profiles, setProfiles] = useState<ChildProfile[]>(SEED_PROFILES);
+  const [profiles, setProfiles] = useState<ChildProfile[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  function handleToggle(id: string, value: boolean) {
-    setProfiles((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, active: value } : p))
-    );
+  const loadProfiles = useCallback(async () => {
+    const all = await repo.getAll();
+    setProfiles(all);
+  }, [repo]);
+
+  useEffect(() => {
+    loadProfiles();
+  }, [loadProfiles]);
+
+  async function handleToggle(id: string, value: boolean) {
+    await repo.setActive(id, value);
+    await loadProfiles();
   }
 
-  function handleSave(draft: Omit<ChildProfile, "id">) {
-    const newProfile: ChildProfile = {
-      ...draft,
+  async function handleSave(draft: { name: string; age?: number; condition: ConditionType; notes?: string }) {
+    await repo.insert({
       id: Date.now().toString(),
-    };
-    setProfiles((prev) => [newProfile, ...prev]);
+      isActive: true,
+      ...draft,
+    });
+    await loadProfiles();
   }
 
   return (
