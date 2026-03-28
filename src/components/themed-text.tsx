@@ -1,28 +1,38 @@
 import { Platform, StyleSheet, Text, type TextProps } from 'react-native';
 
-import { Fonts, ThemeColor } from '@/constants/theme';
+import { ColorToken, FontFamily, Typography, TypographyVariant } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ThemedTextProps = TextProps & {
+  /** Typography scale variant — maps to a Typography preset from theme.ts */
+  variant?: TypographyVariant;
+  /** Color token from the design system */
+  color?: ColorToken;
+  /**
+   * Legacy type prop kept for backward compatibility with existing screens.
+   * Prefer `variant` for new code.
+   */
   type?: 'default' | 'title' | 'small' | 'smallBold' | 'subtitle' | 'link' | 'linkPrimary' | 'code';
-  themeColor?: ThemeColor;
 };
 
-export function ThemedText({ style, type = 'default', themeColor, ...rest }: ThemedTextProps) {
-  const theme = useTheme();
+export function ThemedText({ style, variant, color, type, ...rest }: ThemedTextProps) {
+  const { colors, typography } = useTheme();
 
   return (
     <Text
       style={[
-        { color: theme[themeColor ?? 'text'] },
-        type === 'default' && styles.default,
-        type === 'title' && styles.title,
-        type === 'small' && styles.small,
-        type === 'smallBold' && styles.smallBold,
-        type === 'subtitle' && styles.subtitle,
-        type === 'link' && styles.link,
-        type === 'linkPrimary' && styles.linkPrimary,
-        type === 'code' && styles.code,
+        styles.base,
+        { color: color ? colors[color] : colors.onSurface },
+        variant && typography[variant],
+        // Legacy type mappings
+        type === 'default' && styles.legacyDefault,
+        type === 'title' && styles.legacyTitle,
+        type === 'small' && styles.legacySmall,
+        type === 'smallBold' && styles.legacySmallBold,
+        type === 'subtitle' && styles.legacySubtitle,
+        type === 'link' && styles.legacyLink,
+        type === 'linkPrimary' && styles.legacyLinkPrimary,
+        type === 'code' && styles.legacyCode,
         style,
       ]}
       {...rest}
@@ -31,43 +41,51 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
 }
 
 const styles = StyleSheet.create({
-  small: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: 500,
-  },
-  smallBold: {
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: 700,
-  },
-  default: {
+  base: {
+    fontFamily: FontFamily.body,
     fontSize: 16,
     lineHeight: 24,
-    fontWeight: 500,
   },
-  title: {
+  // --- Legacy type styles (backward compat) ---
+  legacyDefault: {
+    fontFamily: FontFamily.bodyMedium,
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  legacySmall: {
+    fontFamily: FontFamily.body,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  legacySmallBold: {
+    fontFamily: FontFamily.bodySemiBold,
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  legacyTitle: {
+    fontFamily: FontFamily.headline,
     fontSize: 48,
-    fontWeight: 600,
     lineHeight: 52,
   },
-  subtitle: {
+  legacySubtitle: {
+    fontFamily: FontFamily.headlineMedium,
     fontSize: 32,
     lineHeight: 44,
-    fontWeight: 600,
   },
-  link: {
-    lineHeight: 30,
+  legacyLink: {
+    fontFamily: FontFamily.body,
     fontSize: 14,
+    lineHeight: 30,
   },
-  linkPrimary: {
-    lineHeight: 30,
+  legacyLinkPrimary: {
+    fontFamily: FontFamily.body,
     fontSize: 14,
+    lineHeight: 30,
     color: '#3c87f7',
   },
-  code: {
-    fontFamily: Fonts.mono,
-    fontWeight: Platform.select({ android: 700 }) ?? 500,
+  legacyCode: {
+    fontFamily: FontFamily.mono,
+    fontWeight: Platform.select({ android: '700' }) ?? '500',
     fontSize: 12,
   },
 });

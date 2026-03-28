@@ -1,14 +1,13 @@
+import { Colors, ColorToken, Typography, TypographyVariant } from '@/constants/theme';
+
 /**
- * Learn more about light and dark modes:
- * https://docs.expo.dev/guides/color-schemes/
+ * Returns the app's design token objects.
+ * Light-mode only for the current release.
  */
-
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
 export function useTheme() {
-  const scheme = useColorScheme();
-  const theme = scheme === 'unspecified' ? 'light' : scheme;
-
-  return Colors[theme];
+  return {
+    colors: Colors,
+    typography: Typography,
+    color: (token: ColorToken) => Colors[token],
+  };
 }

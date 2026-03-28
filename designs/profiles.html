@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gentle Guardian - Special Requirements</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-low": "#f3f4f4",
+                        "on-secondary-fixed-variant": "#485e71",
+                        "on-secondary-fixed": "#2c4254",
+                        "tertiary-dim": "#535350",
+                        "secondary-dim": "#405568",
+                        "on-error": "#fff7f6",
+                        "on-tertiary-fixed": "#50504d",
+                        "inverse-on-surface": "#9c9d9d",
+                        "error-dim": "#67040d",
+                        "surface-dim": "#d7dbdb",
+                        "tertiary-container": "#ffffff",
+                        "error-container": "#fa746f",
+                        "primary-dim": "#1f5d4b",
+                        "surface-container": "#eceeee",
+                        "on-surface-variant": "#5b6061",
+                        "surface-tint": "#2d6957",
+                        "secondary-fixed": "#cee5fc",
+                        "surface-container-high": "#e6e9e9",
+                        "inverse-primary": "#bffee6",
+                        "secondary-fixed-dim": "#c0d7ee",
+                        "on-error-container": "#6e0a12",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#2d6957",
+                        "secondary-container": "#cee5fc",
+                        "on-primary": "#e4fff3",
+                        "inverse-surface": "#0c0f0f",
+                        "on-secondary": "#f6f9ff",
+                        "secondary": "#4c6175",
+                        "surface-container-highest": "#e0e3e4",
+                        "on-tertiary-container": "#62625f",
+                        "error": "#a83836",
+                        "background": "#f9f9f9",
+                        "on-tertiary": "#fbf9f4",
+                        "primary-fixed": "#b1efd8",
+                        "on-tertiary-fixed-variant": "#6d6d69",
+                        "outline": "#777b7c",
+                        "surface-bright": "#f9f9f9",
+                        "on-primary-container": "#1d5c4a",
+                        "on-primary-fixed": "#004938",
+                        "on-secondary-container": "#3e5467",
+                        "primary-fixed-dim": "#a3e1ca",
+                        "outline-variant": "#afb3b3",
+                        "primary-container": "#b1efd8",
+                        "surface-variant": "#e0e3e4",
+                        "surface": "#f9f9f9",
+                        "tertiary-fixed-dim": "#f2f1ec",
+                        "tertiary-fixed": "#ffffff",
+                        "on-background": "#2f3334",
+                        "on-surface": "#2f3334",
+                        "tertiary": "#5f5f5c",
+                        "on-primary-fixed-variant": "#296654"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .tonal-shift {
+            background-color: #f3f4f4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f9f9;
+            color: #2f3334;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+    </style>
+    <style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen pb-24">
+    <!-- Top Navigation Bar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md shadow-sm flex items-center justify-between px-6 py-4 w-full">
+        <div class="flex items-center gap-4">
+            <button
+                class="text-emerald-800 hover:bg-emerald-50 transition-colors p-2 rounded-full active:scale-95 duration-200"
+                style="">
+                <span class="material-symbols-outlined" data-icon="menu" style="">menu</span>
+            </button>
+            <span class="text-xl font-bold text-emerald-900 tracking-tight" style="">Teacher's App</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-emerald-100">
+                <img alt="Teacher Profile" class="w-full h-full object-cover"
+                    data-alt="Portrait of a friendly preschool teacher smiling warmly, professional indoor setting with soft natural light"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVbx3NVq1xYqTkJkc_GIyU5vAwYLf9g8xXo6ACRZ_l2NC8C-dYwukzm6wQ3y-3VZ6erS1TA_SaW2AGOQtT5sVB0MCHaVNfFiMhxlVarELZkIOU6YBxyGVqNuUj8geQqvQhkPgMYHr7vatqNIcv8WMaqg2A2LdVbeJowSPvC0tY5yFwwo7kjuyba83x3DlxOHHUDYtq6CicuiBWq2k2rF22lPhjwyqsC4p3N1nQbzprF26lrLzeC8MbYFTcXi115j7--6naOJFtryEG"
+                    style="" />
+            </div>
+        </div>
+    </header>
+    <!-- Main Content Canvas -->
+    <main class="pt-24 px-6 max-w-2xl mx-auto">
+        <!-- Header Section with Asymmetric Spacing -->
+        <section class="mt-8 mb-10 flex items-end justify-between">
+            <div class="space-y-1">
+                <p class="text-on-surface-variant font-label text-sm uppercase tracking-wider" style="">Care Management
+                </p>
+                <h1 class="text-3xl font-extrabold text-on-surface tracking-tight" style="">Special Requirements</h1>
+            </div>
+        </section>
+        <!-- Compliance Banner (GDPR/RODO) -->
+        <div class="bg-surface-container-low rounded-xl p-4 mb-8 flex items-center gap-4 border-l-4 border-primary">
+            <span class="material-symbols-outlined text-primary" data-icon="verified_user" style="">verified_user</span>
+            <p class="text-xs text-on-surface-variant leading-relaxed" style="">
+                This view is filtered for specialized care. Data is encrypted and compliant with local educational
+                privacy regulations.
+            </p>
+        </div>
+        <!-- Student List - No Lines, Tonal Separation -->
+        <div class="space-y-3"><button
+                class="w-full flex items-center justify-center gap-3 p-4 bg-primary-container hover:bg-primary/20 text-on-primary-container font-bold rounded-lg transition-all border-2 border-dashed border-primary/30 mb-2 active:scale-[0.98]">
+                <span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                <span>Add Child Profile</span>
+            </button>
+            <!-- Student Card 1 -->
+            <div
+                class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between transition-all hover:shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-primary" data-icon="child_care"
+                            style="">child_care</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface text-lg leading-tight" style="">Leo Anderson</h3>
+                        <div class="flex gap-2 mt-1">
+                            <span
+                                class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide"
+                                style="">ASD</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    <label class="relative inline-flex items-center cursor-pointer" style="">
+                        <input checked="" class="sr-only peer" type="checkbox" />
+                        <div
+                            class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                        </div>
+                    </label>
+                    <span class="text-[10px] font-semibold text-primary uppercase" style="">Active</span>
+                </div>
+            </div>
+            <!-- Student Card 2 -->
+            <div
+                class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between transition-all hover:shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-orange-700" data-icon="medical_services"
+                            style="">medical_services</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface text-lg leading-tight" style="">Mia Thompson</h3>
+                        <div class="flex gap-2 mt-1">
+                            <span
+                                class="bg-error-container text-on-error-container text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide uppercase"
+                                style="">Severe Allergy</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    <label class="relative inline-flex items-center cursor-pointer" style="">
+                        <input checked="" class="sr-only peer" type="checkbox" />
+                        <div
+                            class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                        </div>
+                    </label>
+                    <span class="text-[10px] font-semibold text-primary uppercase" style="">Active</span>
+                </div>
+            </div>
+            <!-- Student Card 3 -->
+            <div
+                class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between transition-all hover:shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-700" data-icon="accessibility_new"
+                            style="">accessibility_new</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface text-lg leading-tight" style="">Noah Garcia</h3>
+                        <div class="flex gap-2 mt-1">
+                            <span
+                                class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide"
+                                style="">ADHD</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    <label class="relative inline-flex items-center cursor-pointer" style="">
+                        <input class="sr-only peer" type="checkbox" />
+                        <div
+                            class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                        </div>
+                    </label>
+                    <span class="text-[10px] font-semibold text-on-surface-variant uppercase" style="">Inactive</span>
+                </div>
+            </div>
+            <!-- Student Card 4 -->
+            <div
+                class="bg-surface-container-lowest p-5 rounded-lg flex items-center justify-between transition-all hover:shadow-md">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-purple-700" data-icon="blind" style="">blind</span>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-on-surface text-lg leading-tight" style="">Elena Rossi</h3>
+                        <div class="flex gap-2 mt-1">
+                            <span
+                                class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-2 py-0.5 rounded-full tracking-wide"
+                                style="">Physical</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end gap-2">
+                    <label class="relative inline-flex items-center cursor-pointer" style="">
+                        <input checked="" class="sr-only peer" type="checkbox" />
+                        <div
+                            class="w-11 h-6 bg-surface-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                        </div>
+                    </label>
+                    <span class="text-[10px] font-semibold text-primary uppercase" style="">Active</span>
+                </div>
+            </div>
+        </div>
+        <!-- Secondary Info Section (Asymmetric Breathing Room) -->
+    </main>
+    <!-- Bottom Navigation Bar -->
+    <nav
+        class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,0,0,0.04)] rounded-t-[2rem] z-50">
+        <button
+            class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-2 hover:text-emerald-600 dark:hover:text-emerald-300 transition-all active:scale-90 duration-200">
+            <span class="material-symbols-outlined mb-1" data-icon="dashboard">dashboard</span>
+            <span class="font-plus-jakarta-sans text-[11px] font-medium tracking-wide uppercase">Dashboard</span>
+        </button>
+        <button
+            class="flex flex-col items-center justify-center bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-100 rounded-full px-6 py-2 transition-all active:scale-90 duration-200">
+            <span class="material-symbols-outlined mb-1" data-icon="group">group</span>
+            <span class="font-plus-jakarta-sans text-[11px] font-medium tracking-wide uppercase">Profiles</span>
+        </button>
+        <button
+            class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-6 py-2 hover:text-emerald-600 dark:hover:text-emerald-300 transition-all active:scale-90 duration-200">
+            <span class="material-symbols-outlined mb-1" data-icon="settings">settings</span>
+            <span class="font-plus-jakarta-sans text-[11px] font-medium tracking-wide uppercase">Settings</span>
+        </button>
+    </nav>
+</body>
+
+</html>
